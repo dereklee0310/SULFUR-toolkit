@@ -3,7 +3,6 @@ Parse ./tmp/data.json to generate json and spreadsheet.
 """
 
 import json
-import re
 import sys
 from collections import defaultdict
 
@@ -54,6 +53,7 @@ MAPPING = {
     "Accuracy when moving": "Accuracy When Moving",
     "Enchantment Random Oil": "Enchantment Random Oil",
     "MISC": "MISC",  # Not a built-in one, for sheet name conversion
+    "artwork": "Artwork"
 }
 
 EFFECT_TYPES = list(MAPPING.values())[4:]
@@ -76,6 +76,8 @@ def build_oil_object(data, oil_id):
         "basePrice": oil_data["basePrice"],
         **get_oil_definition(data, str(oil_data["appliesEnchantment"]["m_PathID"])),
     }
+    if args.dev:
+        result["artwork"] = oil_data["artwork"]["m_PathID"]
 
     # df.rename and df.map are great, but we also want to dump a json file
     # so we need to format them here
@@ -169,9 +171,20 @@ def build_recipe_object(data, recipe_id):
         "Items Needed": {},
     }
 
+    if args.dev:
+        result["Item Artwork"] = data[str(recipe_data["createsItem"]["m_PathID"])]["artwork"]["m_PathID"]
+
     for item_data in recipe_data["itemsNeeded"]:
-        item_name = data[str(item_data["item"]["m_PathID"])]["displayName"]
-        result["Items Needed"][item_name] = item_data["quantity"]
+        real_item_data = data[str(item_data["item"]["m_PathID"])]
+        item_name = real_item_data["displayName"]
+
+        if args.dev:
+            result["Items Needed"][item_name] = {
+                "Quantity": item_data["quantity"],
+                "Artwork": real_item_data["artwork"]["m_PathID"]
+            }
+        else:
+            result["Items Needed"][item_name] = item_data["quantity"]
     return result
 
 
@@ -213,5 +226,5 @@ if __name__ == "__main__":
     except FileNotFoundError:
         logger.critical("%s not found! Please parse the game bundles first.")
         sys.exit()
-    # parse_oil_data(data)
+    parse_oil_data(data)
     parse_recipe_data(data)
