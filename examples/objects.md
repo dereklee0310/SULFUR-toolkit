@@ -1,4 +1,7 @@
 # Object Definition
+```
+"C:\Program Files (x86)\Steam\steamapps\common\SULFUR\Sulfur_Data\StreamingAssets\aa\StandaloneWindows64"
+```
 ## Enchantment_ActionOil
 ```json
 {

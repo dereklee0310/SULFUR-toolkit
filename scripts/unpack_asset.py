@@ -19,28 +19,32 @@ logger = setup_logger(args.logging_level)
 print(logger.level)
 
 
-def get_bundle():
-    bundles = list(str(x) for x in Path("./").glob("spritesitems*.bundle"))
+def get_bundles():
+    # Use spritesitems and gamedefinitions
+    bundles = list(str(x) for x in Path("./").glob("*.bundle"))
+    for bundle in bundles:
+        logger.info("Found '%s'", bundle)
     if not bundles:
         logger.critical(".bundle file not found, please put it in the same directory")
         sys.exit()
-    if len(bundles) > 1:
-        logger.warning("Found multiple .bundle files, will use the first one it found")
-    logger.info("Parsing '%s'", bundles[0])
-    return bundles[0]
+    return bundles
 
 
 def unpack_asset():
     id_table = {}
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    env = UnityPy.load(get_bundle())
+    env = UnityPy.Environment()
+    for bundle in get_bundles():
+        env.load_file(bundle)
+
     cnt = 0
     for obj in env.objects:
         if (
             (obj.type.name not in ["Texture2D", "Sprite"])
             or (args.sprite and obj.type.name == "Texture2D")
             or (args.texture and obj.type.name == "Sprite")
+            or not obj.peek_name() # Skip when there's no name for UnityPy
         ):
             logger.debug(f"Skipping  {obj.type.name:>14}: %s", obj.peek_name())
             continue

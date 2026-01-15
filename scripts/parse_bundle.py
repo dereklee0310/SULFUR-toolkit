@@ -21,12 +21,14 @@ logger = setup_logger(args.logging_level)
 
 def get_bundle():
     bundles = list(str(x) for x in Path("./").glob("gamedefinitions*.bundle"))
+    for bundle in bundles:
+        logger.info("Found '%s'", bundle)
+
     if not bundles:
         logger.critical(".bundle file not found, please put it in the same directory")
         sys.exit()
     if len(bundles) > 1:
         logger.warning("Found multiple .bundle files, will use the first one it found")
-    logger.info("Parsing '%s'", bundles[0])
     return bundles[0]
 
 
