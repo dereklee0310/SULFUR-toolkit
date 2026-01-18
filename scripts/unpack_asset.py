@@ -57,11 +57,10 @@ def unpack_asset():
             logger.debug(f"Skipping  {obj.type.name:>14}: %s", obj_name)
             continue
 
-        item_id = str(obj.path_id)
         item_name = tree.m_Name
         cnt += 1
         logger.info(f"Unpacking {obj.type.name:>14} {cnt:>4}: '%s'", item_name)
-        id_table[item_id] = item_name
+        id_table[str(obj.path_id)] = item_name
         tree.image.save(OUTPUT_DIR / f"{item_name}.png")
 
     with open(OUTPUT_DIR / "data.json", "w", encoding="utf8") as f:

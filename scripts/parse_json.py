@@ -17,6 +17,7 @@ OIL_XLSX_OUTPUT_PATH = "./oils.xlsx"
 OIL_JSON_OUTPUT_PATH = "./oils.json"
 RECIPE_JSON_OUTPUT_PATH = "./recipes.json"
 RECIPE_XLSX_OUTPUT_PATH = "./recipes.xlsx"
+WEAPON_JSON_OUTPUT_PATH = "./weapons.json"
 
 RECIPE_DATABASE_ID = "3425407372818098406"
 
@@ -83,7 +84,7 @@ def build_oil_object(src_data, mapping, oil_id):
         ),
     }
     if args.dev:
-        result["artwork"] = oil_data["artwork"]["m_PathID"]
+        result["artwork"] = str(oil_data["artwork"]["m_PathID"])
 
     # df.rename and df.map are great, but we also want to dump a json file
     # so we need to format them here
@@ -214,9 +215,9 @@ def build_recipe_object(src_data, mapping, recipe_data):
     }
 
     if args.dev:
-        result["Item Artwork"] = src_data[mapping[recipe_data["createsItem"]["value"]]][
+        result["Item Artwork"] = str(src_data[mapping[recipe_data["createsItem"]["value"]]][
             "artwork"
-        ]["m_PathID"]
+        ]["m_PathID"])
 
     for item_data in recipe_data["itemsNeeded"]:
         real_item_data = src_data[mapping[item_data["item"]["value"]]]
@@ -225,7 +226,7 @@ def build_recipe_object(src_data, mapping, recipe_data):
         if args.dev:
             result["Items Needed"][item_name] = {
                 "Quantity": item_data["quantity"],
-                "Artwork": real_item_data["artwork"]["m_PathID"],
+                "Artwork": str(real_item_data["artwork"]["m_PathID"]),
             }
         else:
             result["Items Needed"][item_name] = item_data["quantity"]
@@ -256,6 +257,29 @@ def parse_recipe_data(src_data):
     dump_recipe_xlsx(recipe_infos, recipes_of_items)
 
 
+def parse_weapon_data(src_data):
+    weapons = {}
+    for k, v in src_data.items():
+        if "slotType" in v and v["slotType"] == 7:
+            weapons[v["displayName"]] = {
+                "basePrice": v["basePrice"],
+                "artwork": str(v["artwork"]["m_PathID"]),
+                "maxDurability": v["maxDurability"],
+                "useType": v["useType"],  # TODO
+                "slotType": v["slotType"],  # TODO
+                # "damageType": 7,
+                # "weaponType": 10,
+                # "caliber": 5,
+                # "damageMultiplier": 1.0,
+                # "usableByPlayer": 1,
+                # "projectileType": 1,
+            }
+    with open(WEAPON_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
+        json.dump(
+            weapons, f, ensure_ascii=False, indent=4
+        )
+
+
 if __name__ == "__main__":
     logger.info("Parsing json file: %s", DATA_PATH)
     try:
@@ -267,3 +291,4 @@ if __name__ == "__main__":
 
     parse_oil_data(data)
     parse_recipe_data(data["src"])
+    parse_weapon_data(data["src"])

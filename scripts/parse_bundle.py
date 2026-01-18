@@ -32,7 +32,11 @@ def get_bundle():
 
 
 def parse_bundle():
-    id_table = {"oil_ids": [], "src": {}}  # Record oil & recipe id on the fly
+    id_table = {
+        "oil_ids": [],
+        "weapon_ids": [],
+        "src": {},
+    }  # Record oil & weapon id on the fly
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     env = UnityPy.load(get_bundle())
