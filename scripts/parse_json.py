@@ -76,7 +76,11 @@ def build_oil_object(src_data, mapping, oil_id):
         "includedInDemo": oil_data["includedInDemo"],
         "includedInEarlyAccess": oil_data["includedInEarlyAccess"],
         "basePrice": oil_data["basePrice"],
-        **get_oil_definition(src_data, mapping, mapping["enchantment"][oil_data["appliesEnchantment"]["value"]]),
+        **get_oil_definition(
+            src_data,
+            mapping,
+            mapping["enchantment"][oil_data["appliesEnchantment"]["value"]],
+        ),
     }
     if args.dev:
         result["artwork"] = oil_data["artwork"]["m_PathID"]
@@ -94,7 +98,9 @@ def get_oil_definition(src_data, mapping, oil_definition_id):
     definition_data = src_data[oil_definition_id]
     return {
         "CostsDurability": definition_data["CostsDurability"],
-        **get_modifiers_definition(src_data, mapping, definition_data["modifiersApplied"]),
+        **get_modifiers_definition(
+            src_data, mapping, definition_data["modifiersApplied"]
+        ),
     }
 
 
@@ -161,7 +167,9 @@ def get_oil_mapping(src_data):
 
 def parse_oil_data(data):
     mapping = get_oil_mapping(data["src"])
-    oil_infos = [build_oil_object(data["src"], mapping, oil_id) for oil_id in data["oil_ids"]]
+    oil_infos = [
+        build_oil_object(data["src"], mapping, oil_id) for oil_id in data["oil_ids"]
+    ]
     oil_groups = defaultdict(list)
     for oil_info in oil_infos:
         for type in get_oil_types(oil_info):
@@ -171,7 +179,6 @@ def parse_oil_data(data):
         json.dump({"all": oil_infos} | oil_groups, f, ensure_ascii=False, indent=4)
 
     dump_oil_xlsx(oil_infos, oil_groups)
-
 
 
 def dump_recipe_xlsx(recipe_infos, recipes_of_items):
@@ -191,6 +198,7 @@ def get_recipe_mapping(src_data):
             mapping[v["id"]["value"]] = k
     return mapping
 
+
 def build_recipe_object(src_data, mapping, recipe_data):
     global cnt
     cnt += 1
@@ -198,7 +206,9 @@ def build_recipe_object(src_data, mapping, recipe_data):
     logger.info(f"Parsing {cnt:>4} %s", recipe_data["name"])
     result = {
         "Recipe Name": recipe_data["name"],
-        "Item Name": src_data[mapping[recipe_data["createsItem"]["value"]]]["displayName"],
+        "Item Name": src_data[mapping[recipe_data["createsItem"]["value"]]][
+            "displayName"
+        ],
         "Quantity": recipe_data["quantityCreated"],
         "Items Needed": {},
     }
@@ -220,6 +230,7 @@ def build_recipe_object(src_data, mapping, recipe_data):
         else:
             result["Items Needed"][item_name] = item_data["quantity"]
     return result
+
 
 def parse_recipe_data(src_data):
     mapping = get_recipe_mapping(src_data)
