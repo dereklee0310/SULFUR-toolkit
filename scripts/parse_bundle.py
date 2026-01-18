@@ -1,5 +1,5 @@
 """
-Extract oil & recipe data from gamedefinitions_assets_all_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.bundle.
+Extract oil & recipe data.
 """
 
 import json
@@ -13,14 +13,13 @@ from utils.utils import parse_bundle_args, setup_logger
 OUTPUT_DIR = Path("./tmp")
 # Some items have incorrect m_Name that matches with this regex, don't want to touch this shit now ;)
 OIL_NAME_REGEX = re.compile(r"Enchantment_(.*)Oil")
-RECIPE_NAME_REGEX = re.compile(r"Recipe_(.*)")
 
 args = parse_bundle_args()
 logger = setup_logger(args.logging_level)
 
 
 def get_bundle():
-    bundles = list(str(x) for x in Path("./").glob("gamedefinitions*.bundle"))
+    bundles = list(str(x) for x in Path("./").glob("onstartup_assets_all_*.bundle"))
     for bundle in bundles:
         logger.info("Found '%s'", bundle)
 
@@ -33,7 +32,7 @@ def get_bundle():
 
 
 def parse_bundle():
-    id_table = {"oil_ids": [], "recipe_ids": []}  # Record oil & recipe id on the fly
+    id_table = {"oil_ids": [], "src": {}}  # Record oil & recipe id on the fly
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     env = UnityPy.load(get_bundle())
@@ -51,12 +50,8 @@ def parse_bundle():
                 cnt += 1
                 logger.info(f"Found    oil {cnt:>3}: '%s'", item_name)
                 id_table["oil_ids"].append(item_id)
-            elif RECIPE_NAME_REGEX.match(item_name):
-                cnt += 1
-                logger.info(f"Found recipe {cnt:>3}: '%s'", item_name)
-                id_table["recipe_ids"].append(item_id)
 
-            id_table[item_id] = tree
+            id_table["src"][item_id] = tree
 
     with open(OUTPUT_DIR / "data.json", "w", encoding="utf8") as f:
         json.dump(id_table, f, ensure_ascii=False, indent=4)

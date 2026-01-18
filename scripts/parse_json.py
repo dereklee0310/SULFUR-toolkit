@@ -18,6 +18,8 @@ OIL_JSON_OUTPUT_PATH = "./oils.json"
 RECIPE_JSON_OUTPUT_PATH = "./recipes.json"
 RECIPE_XLSX_OUTPUT_PATH = "./recipes.xlsx"
 
+RECIPE_DATABASE_ID = "3425407372818098406"
+
 MAPPING = {
     "displayName": "Name",
     "includedInDemo": "Demo",
@@ -53,7 +55,7 @@ MAPPING = {
     "Accuracy when moving": "Accuracy When Moving",
     "Enchantment Random Oil": "Enchantment Random Oil",
     "MISC": "MISC",  # Not a built-in one, for sheet name conversion
-    "artwork": "Artwork"
+    "artwork": "Artwork",
 }
 
 EFFECT_TYPES = list(MAPPING.values())[4:]
@@ -63,9 +65,9 @@ logger = setup_logger(args.logging_level)
 cnt = 0
 
 
-def build_oil_object(data, oil_id):
+def build_oil_object(src_data, mapping, oil_id):
     # Enchantment_*Oil
-    oil_data = data[oil_id]
+    oil_data = src_data[oil_id]
     global cnt
     cnt += 1
     logger.info(f"Parsing {cnt:>4} %s", oil_data["displayName"])
@@ -74,7 +76,7 @@ def build_oil_object(data, oil_id):
         "includedInDemo": oil_data["includedInDemo"],
         "includedInEarlyAccess": oil_data["includedInEarlyAccess"],
         "basePrice": oil_data["basePrice"],
-        **get_oil_definition(data, str(oil_data["appliesEnchantment"]["m_PathID"])),
+        **get_oil_definition(src_data, mapping, mapping["enchantment"][oil_data["appliesEnchantment"]["value"]]),
     }
     if args.dev:
         result["artwork"] = oil_data["artwork"]["m_PathID"]
@@ -87,20 +89,20 @@ def build_oil_object(data, oil_id):
     }
 
 
-def get_oil_definition(data, oil_definition_id):
+def get_oil_definition(src_data, mapping, oil_definition_id):
     # EnchantmentDefinition_*Oil
-    definition_data = data[oil_definition_id]
+    definition_data = src_data[oil_definition_id]
     return {
         "CostsDurability": definition_data["CostsDurability"],
-        **get_modifiers_definition(data, definition_data["modifiersApplied"]),
+        **get_modifiers_definition(src_data, mapping, definition_data["modifiersApplied"]),
     }
 
 
-def get_modifiers_definition(data, modifiers):
+def get_modifiers_definition(src_data, mapping, modifiers):
     results = {}
     for modifier in modifiers:
         # itemDescriptionName is not reliable, use label instead
-        name = data[str(modifier["attribute"]["m_PathID"])]["label"]
+        name = src_data[mapping["attribute"][modifier["attribute"]]]["label"]
         # 100: boolean/add, 200: multiplier, 300: bullet size
         mod_type = modifier["modType"]
         value = modifier["value"]
@@ -145,8 +147,21 @@ def dump_oil_xlsx(oil_infos, oil_groups):
     adjust_width(OIL_XLSX_OUTPUT_PATH)
 
 
+def get_oil_mapping(src_data):
+    mapping = {"enchantment": {}, "attribute": {}}
+    for k, v in src_data.items():
+        if "enchantmentName" in v:
+            mapping["enchantment"][v["id"]["value"]] = k
+        elif "applyAttributeModifier" in v:
+            print(v["m_Name"])
+            mapping["attribute"][v["id"]] = k
+
+    return mapping
+
+
 def parse_oil_data(data):
-    oil_infos = [build_oil_object(data, oil_id) for oil_id in data["oil_ids"]]
+    mapping = get_oil_mapping(data["src"])
+    oil_infos = [build_oil_object(data["src"], mapping, oil_id) for oil_id in data["oil_ids"]]
     oil_groups = defaultdict(list)
     for oil_info in oil_infos:
         for type in get_oil_types(oil_info):
@@ -158,35 +173,6 @@ def parse_oil_data(data):
     dump_oil_xlsx(oil_infos, oil_groups)
 
 
-def build_recipe_object(data, recipe_id):
-    recipe_data = data[recipe_id]
-    global cnt
-    cnt += 1
-    # Recipe doesn't have displayName
-    logger.info(f"Parsing {cnt:>4} %s", recipe_data["m_Name"])
-    result = {
-        "Recipe Name": recipe_data["m_Name"],
-        "Item Name": data[str(recipe_data["createsItem"]["m_PathID"])]["displayName"],
-        "Quantity": recipe_data["quantityCreated"],
-        "Items Needed": {},
-    }
-
-    if args.dev:
-        result["Item Artwork"] = data[str(recipe_data["createsItem"]["m_PathID"])]["artwork"]["m_PathID"]
-
-    for item_data in recipe_data["itemsNeeded"]:
-        real_item_data = data[str(item_data["item"]["m_PathID"])]
-        item_name = real_item_data["displayName"]
-
-        if args.dev:
-            result["Items Needed"][item_name] = {
-                "Quantity": item_data["quantity"],
-                "Artwork": real_item_data["artwork"]["m_PathID"]
-            }
-        else:
-            result["Items Needed"][item_name] = item_data["quantity"]
-    return result
-
 
 def dump_recipe_xlsx(recipe_infos, recipes_of_items):
     with pd.ExcelWriter(RECIPE_XLSX_OUTPUT_PATH, engine="openpyxl") as writer:
@@ -197,9 +183,50 @@ def dump_recipe_xlsx(recipe_infos, recipes_of_items):
     adjust_width(RECIPE_XLSX_OUTPUT_PATH)
 
 
-def parse_recipe_data(data):
+def get_recipe_mapping(src_data):
+    mapping = {}
+    for k, v in src_data.items():
+        # Use three keys to identify an actual item, wtf perfect random
+        if "displayName" in v and "id" in v and "artwork" in v:
+            mapping[v["id"]["value"]] = k
+    return mapping
+
+def build_recipe_object(src_data, mapping, recipe_data):
+    global cnt
+    cnt += 1
+    # Recipe doesn't have displayName
+    logger.info(f"Parsing {cnt:>4} %s", recipe_data["name"])
+    result = {
+        "Recipe Name": recipe_data["name"],
+        "Item Name": src_data[mapping[recipe_data["createsItem"]["value"]]]["displayName"],
+        "Quantity": recipe_data["quantityCreated"],
+        "Items Needed": {},
+    }
+
+    if args.dev:
+        result["Item Artwork"] = src_data[mapping[recipe_data["createsItem"]["value"]]][
+            "artwork"
+        ]["m_PathID"]
+
+    for item_data in recipe_data["itemsNeeded"]:
+        real_item_data = src_data[mapping[item_data["item"]["value"]]]
+        item_name = real_item_data["displayName"]
+
+        if args.dev:
+            result["Items Needed"][item_name] = {
+                "Quantity": item_data["quantity"],
+                "Artwork": real_item_data["artwork"]["m_PathID"],
+            }
+        else:
+            result["Items Needed"][item_name] = item_data["quantity"]
+    return result
+
+def parse_recipe_data(src_data):
+    mapping = get_recipe_mapping(src_data)
+
+    recipes = src_data[RECIPE_DATABASE_ID]["recipes"]
     recipe_infos = [
-        build_recipe_object(data, recipe_id) for recipe_id in data["recipe_ids"]
+        build_recipe_object(src_data, mapping, recipe_data) for recipe_data in recipes
     ]
     recipes_of_items = defaultdict(list)
     for recipe_info in recipe_infos:
@@ -226,5 +253,6 @@ if __name__ == "__main__":
     except FileNotFoundError:
         logger.critical("%s not found! Please parse the game bundles first.")
         sys.exit()
+
     parse_oil_data(data)
-    parse_recipe_data(data)
+    parse_recipe_data(data["src"])
