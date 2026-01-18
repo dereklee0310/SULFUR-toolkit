@@ -22,7 +22,7 @@ uv sync
 
 ## Executing program
 ### Oil & Recipe Data
-First, copy `gamedefinitions_assets_all_*.bundle` this project directory, you can find it at:
+First, copy `onstartup_assets_all_*.bundle` this project directory, you can find it at:
 ```
 C:\Program Files (x86)\Steam\steamapps\common\SULFUR\Sulfur_Data\StreamingAssets\aa\StandaloneWindows64\
 ```
@@ -32,7 +32,7 @@ And the project directory should look like this:
 ├── LICENSE
 ├── README.md
 ├── examples
-├── gamedefinitions_assets_all_*.bundle
+├── onstartup_assets_all_*.bundle
 ├── pyproject.toml
 ├── requirements.txt
 ├── scripts
@@ -49,13 +49,7 @@ uv run scripts/parse_json.py
 ```
 
 ### Assets
-1. Copy the following files into this project directory
-```
-gamedefinitions_assets_all_*.bundle
-spritesitems_assets_all_*.bundle
-materials_assets_all_*.bundle
-```
-2. Run the script below to unpack Sprite and Texture2D assets into `assets/`
+Run the script below to unpack Sprite and Texture2D assets into `assets/`
 ```
 uv run scripts/unpack_asset.py
 ```

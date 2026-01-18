@@ -1,5 +1,5 @@
 """
-Extract Sprites & Texture2D from spritesitems_assets_all_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.bundle
+Extract Sprites & Texture2D.
 """
 
 import json
@@ -40,20 +40,21 @@ def unpack_asset():
 
     cnt = 0
     for obj in env.objects:
+        obj_name = obj.peek_name()
         if (
             (obj.type.name not in ["Texture2D", "Sprite"])
             or (args.sprite and obj.type.name == "Texture2D")
             or (args.texture and obj.type.name == "Sprite")
-            or not obj.peek_name() # Skip when there's no name for UnityPy
+            or obj_name in ("", "Font Texture")
         ):
-            logger.debug(f"Skipping  {obj.type.name:>14}: %s", obj.peek_name())
+            logger.debug(f"Skipping  {obj.type.name:>14}: %s", obj_name)
             continue
 
         tree = obj.parse_as_object()  # m_Structure is unpacked by UnityPy temporarily
 
         # Some sprites has no texture
         if obj.type.name == "Sprite" and tree.m_RD.texture.path_id == 0:
-            logger.debug(f"Skipping  {obj.type.name:>14}: %s", obj.peek_name())
+            logger.debug(f"Skipping  {obj.type.name:>14}: %s", obj_name)
             continue
 
         item_id = str(obj.path_id)

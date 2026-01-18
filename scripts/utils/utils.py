@@ -54,7 +54,7 @@ def setup_logger(logging_level: str) -> logging.Logger:
 
 def parse_bundle_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Extract oil & recipe data from gamedefinitions_assets...",
+        description="Extract oil & recipe data.",
         formatter_class=Formatter,
     )
     parser.add_argument(
@@ -92,7 +92,7 @@ def parse_json_args() -> argparse.Namespace:
 
 def parse_asset_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Extract Sprites & Texture2D from spritesitems_assets...",
+        description="Extract Sprites & Texture2D.",
         formatter_class=Formatter,
     )
     parser.add_argument(
