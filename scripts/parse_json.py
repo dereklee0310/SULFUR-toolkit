@@ -14,11 +14,15 @@ from utils.utils import parse_json_args, setup_logger
 
 DATA_PATH = "./tmp/data.json"
 CATEGORY_PATH = "./tmp/category.json"
+MAPPING_PATH = "./tmp/mapping.json"
 OIL_XLSX_OUTPUT_PATH = "./oils.xlsx"
 OIL_JSON_OUTPUT_PATH = "./oils.json"
 RECIPE_JSON_OUTPUT_PATH = "./recipes.json"
 RECIPE_XLSX_OUTPUT_PATH = "./recipes.xlsx"
 WEAPON_JSON_OUTPUT_PATH = "./weapons.json"
+
+
+SCROLL_JSON_OUTPUT_PATH = "./scrolls.json"
 
 RECIPE_DATABASE_ID = "3425407372818098406"
 
@@ -67,9 +71,9 @@ logger = setup_logger(args.logging_level)
 cnt = 0
 
 
-def build_oil_object(src_data, mapping, oil_id):
+def build_oil_object(data, mapping, oil_id):
     # Enchantment_*Oil
-    oil_data = src_data[oil_id]
+    oil_data = data[oil_id]
     global cnt
     cnt += 1
     logger.info(f"Parsing {cnt:>4} %s", oil_data["displayName"])
@@ -79,9 +83,9 @@ def build_oil_object(src_data, mapping, oil_id):
         "includedInEarlyAccess": oil_data["includedInEarlyAccess"],
         "basePrice": oil_data["basePrice"],
         **get_oil_definition(
-            src_data,
+            data,
             mapping,
-            mapping["enchantment"][oil_data["appliesEnchantment"]["value"]],
+            mapping["enchantmentDefinition"][str(oil_data["appliesEnchantment"]["value"])],
         ),
     }
     if args.dev:
@@ -90,27 +94,27 @@ def build_oil_object(src_data, mapping, oil_id):
     # df.rename and df.map are great, but we also want to dump a json file
     # so we need to format them here
     return {
-        MAPPING[k]: (float(f"{v:.2f}") if isinstance(v, float) else v)
+        MAPPING[k] if k in MAPPING else k: (float(f"{v:.2f}") if isinstance(v, float) else v)
         for k, v in result.items()
     }
 
 
-def get_oil_definition(src_data, mapping, oil_definition_id):
+def get_oil_definition(data, mapping, oil_definition_id):
     # EnchantmentDefinition_*Oil
-    definition_data = src_data[oil_definition_id]
+    definition_data = data[oil_definition_id]
     return {
         "CostsDurability": definition_data["CostsDurability"],
         **get_modifiers_definition(
-            src_data, mapping, definition_data["modifiersApplied"]
+            data, mapping, definition_data["modifiersApplied"]
         ),
     }
 
 
-def get_modifiers_definition(src_data, mapping, modifiers):
+def get_modifiers_definition(data, mapping, modifiers):
     results = {}
     for modifier in modifiers:
         # itemDescriptionName is not reliable, use label instead
-        name = src_data[mapping["attribute"][modifier["attribute"]]]["label"]
+        name = data[mapping["attributeModifier"][str(modifier["attribute"])]]["label"]
         # 100: boolean/add, 200: multiplier, 300: bullet size
         mod_type = modifier["modType"]
         value = modifier["value"]
@@ -155,22 +159,9 @@ def dump_oil_xlsx(oil_infos, oil_groups):
     adjust_width(OIL_XLSX_OUTPUT_PATH)
 
 
-def get_oil_mapping(src_data):
-    mapping = {"enchantment": {}, "attribute": {}}
-    for k, v in src_data.items():
-        if "enchantmentName" in v:
-            mapping["enchantment"][v["id"]["value"]] = k
-        elif "applyAttributeModifier" in v:
-            print(v["m_Name"])
-            mapping["attribute"][v["id"]] = k
-
-    return mapping
-
-
-def parse_oil_data(data, category):
-    mapping = get_oil_mapping(data["src"])
+def parse_oil_data(data, category, mapping):
     oil_infos = [
-        build_oil_object(data["src"], mapping, oil_id) for oil_id in data["oil_ids"]
+        build_oil_object(data, mapping, oil_id) for oil_id in category["enchantment"]["oil"]
     ]
     oil_groups = defaultdict(list)
     for oil_info in oil_infos:
@@ -181,6 +172,16 @@ def parse_oil_data(data, category):
         json.dump({"all": oil_infos} | oil_groups, f, ensure_ascii=False, indent=4)
 
     dump_oil_xlsx(oil_infos, oil_groups)
+
+def parse_scroll_data(data, category, mapping):
+    oil_infos = [
+        build_oil_object(data, mapping, oil_id) for oil_id in category["enchantment"]["scroll"]
+    ]
+
+    with open(SCROLL_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
+        json.dump(oil_infos, f, ensure_ascii=False, indent=4)
+
+    # dump_oil_xlsx(oil_infos, oil_groups)
 
 
 def dump_recipe_xlsx(recipe_infos, recipes_of_items):
@@ -288,11 +289,14 @@ if __name__ == "__main__":
         with open(DATA_PATH, "r", encoding="utf8") as f:
             data = json.load(f)
         with open(CATEGORY_PATH, "r", encoding="utf8") as f:
-            cateogry = json.load(f)
+            category = json.load(f)
+        with open(MAPPING_PATH, "r", encoding="utf8") as f:
+            mapping = json.load(f)
     except FileNotFoundError:
         logger.critical("%s not found! Please parse the game bundles first.")
         sys.exit()
 
-    parse_oil_data(data, cateogry)
-    parse_recipe_data(data["src"])
-    parse_weapon_data(data["src"])
+    parse_oil_data(data, category, mapping)
+    parse_scroll_data(data, category, mapping)
+    # parse_recipe_data(data["src"])
+    # parse_weapon_data(data["src"])

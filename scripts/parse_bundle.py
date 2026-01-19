@@ -38,59 +38,75 @@ def parse_bundle():
     category = {
         "weapon": [],
         "enchantment": {"oil": [], "scroll": []},
-        "attachment": {"muzzle": [], "scope": [], "laser_sight": [], "chamber": [], "insurance": []},
-        "chamber_chisel": [],
+        "attachment": {"muzzle": [], "scope": [], "laserSight": [], "chamber": [], "insurance": []},
+        "chamberChisel": [],
     }
+    mapping = {"item": {}, "enchantmentDefinition": {}, "attributeModifier": {}}
 
     env = UnityPy.load(get_bundle())
     cnt = 0
     for obj in env.objects:
-        if obj.type.name == "MonoBehaviour" and obj.peek_name():
-            tree = obj.parse_as_dict()  # m_Structure is unpacked by UnityPy temporarily
-            item_id = str(obj.path_id)
-            item_name = tree["m_Name"]
-            logger.debug("Parsing '%s'", item_name)
-            data[item_id] = tree
+        if obj.type.name != "MonoBehaviour" or not obj.peek_name():
+            continue
 
-            cnt += 1
-            if item_name.startswith("Enchantment_"):
-                logger.info(f"Found    enchantment {cnt:>3}: '%s'", item_name)
-                if item_name.endswith("Oil"):
-                    category["enchantment"]["oil"].append(item_id)
-                else:
-                    category["enchantment"]["scroll"].append(item_id)
-            elif item_name.startswith("Attachment_"):
-                logger.info(f"Found     attachment {cnt:>3}: '%s'", item_name)
+        tree = obj.parse_as_dict()  # m_Structure is unpacked by UnityPy temporarily
+        item_id = str(obj.path_id)
+        item_name = tree["m_Name"]
+        logger.debug("Parsing '%s'", item_name)
+        data[item_id] = tree
 
-                if not tree["modifiersOnAttachToItem"]:
-                    category["attachment"]["insurance"].append(item_id)
-                    continue
-                
-                attachment_type = tree["modifiersOnAttachToItem"][0]["attribute"]
-                if attachment_type in (57, 58):  # 57: silence, 58: spead
-                    category["attachment"]["muzzle"].append(item_id)
-                elif attachment_type == 5:  # crit chance
-                    category["attachment"]["scope"].append(item_id)
-                elif attachment_type == 1:  # accuracy while moving
-                    category["attachment"]["laser_sight"].append(item_id)
-                elif attachment_type == 14:  # firing mode
-                    # 1 for gun crank, -1 for priming bolt
-                    # Priming bolt also have spread and damage, ignore it for now
-                    category["attachment"]["chamber"].append(item_id)
-            elif WEAPON_NAME_REGEX.match(item_name):
-                logger.info(f"Found         weapon {cnt:>3}: '%s'", item_name)
-                category["weapon"].append(item_id)
-            elif item_name.startswith("Consumable_ChamberChisel"):
-                logger.info(f"Found chamber chisel {cnt:>3}: '%s'", item_name)
-                category["chamber_chisel"].append(item_id)
+
+        # Use three keys to identify an actual item, wtf perfect random
+        if "displayName" in tree and "id" in tree and "artwork" in tree:
+            mapping["item"][tree["id"]["value"]] = item_id
+
+        if "enchantmentName" in tree:
+            mapping["enchantmentDefinition"][tree["id"]["value"]] = item_id
+        elif "applyAttributeModifier" in tree:
+            mapping["attributeModifier"][tree["id"]] = item_id
+
+        cnt += 1
+        if item_name.startswith("Enchantment_"):
+            logger.info(f"Found    enchantment {cnt:>3}: '%s'", item_name)
+            if item_name.endswith("Oil"):
+                category["enchantment"]["oil"].append(item_id)
             else:
-                cnt -= 1
+                category["enchantment"]["scroll"].append(item_id)
+        elif item_name.startswith("Attachment_"):
+            logger.info(f"Found     attachment {cnt:>3}: '%s'", item_name)
+
+            if not tree["modifiersOnAttachToItem"]:
+                category["attachment"]["insurance"].append(item_id)
+                continue
+
+            attachment_type = tree["modifiersOnAttachToItem"][0]["attribute"]
+            if attachment_type in (57, 58):  # 57: silence, 58: spead
+                category["attachment"]["muzzle"].append(item_id)
+            elif attachment_type == 5:  # crit chance
+                category["attachment"]["scope"].append(item_id)
+            elif attachment_type == 1:  # accuracy while moving
+                category["attachment"]["laserSight"].append(item_id)
+            elif attachment_type == 14:  # firing mode
+                # 1 for gun crank, -1 for priming bolt
+                # Priming bolt also have spread and damage, ignore it for now
+                category["attachment"]["chamber"].append(item_id)
+        elif WEAPON_NAME_REGEX.match(item_name):
+            logger.info(f"Found         weapon {cnt:>3}: '%s'", item_name)
+            category["weapon"].append(item_id)
+        elif item_name.startswith("Consumable_ChamberChisel"):
+            logger.info(f"Found chamber chisel {cnt:>3}: '%s'", item_name)
+            category["chamberChisel"].append(item_id)
+        else:
+            cnt -= 1
 
     with open(OUTPUT_DIR / "category.json", "w", encoding="utf8") as f:
         json.dump(category, f, ensure_ascii=False, indent=4)
 
     with open(OUTPUT_DIR / "data.json", "w", encoding="utf8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
+
+    with open(OUTPUT_DIR / "mapping.json", "w", encoding="utf8") as f:
+        json.dump(mapping, f, ensure_ascii=False, indent=4)
 
 
 if __name__ == "__main__":
