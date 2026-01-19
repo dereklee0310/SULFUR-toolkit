@@ -13,6 +13,7 @@ from openpyxl.worksheet.dimensions import ColumnDimension, DimensionHolder
 from utils.utils import parse_json_args, setup_logger
 
 DATA_PATH = "./tmp/data.json"
+CATEGORY_PATH = "./tmp/category.json"
 OIL_XLSX_OUTPUT_PATH = "./oils.xlsx"
 OIL_JSON_OUTPUT_PATH = "./oils.json"
 RECIPE_JSON_OUTPUT_PATH = "./recipes.json"
@@ -166,7 +167,7 @@ def get_oil_mapping(src_data):
     return mapping
 
 
-def parse_oil_data(data):
+def parse_oil_data(data, category):
     mapping = get_oil_mapping(data["src"])
     oil_infos = [
         build_oil_object(data["src"], mapping, oil_id) for oil_id in data["oil_ids"]
@@ -281,14 +282,17 @@ def parse_weapon_data(src_data):
 
 
 if __name__ == "__main__":
-    logger.info("Parsing json file: %s", DATA_PATH)
+    logger.info("Parsing file: %s", DATA_PATH)
+    logger.info("Using category: %s", DATA_PATH)
     try:
         with open(DATA_PATH, "r", encoding="utf8") as f:
             data = json.load(f)
+        with open(CATEGORY_PATH, "r", encoding="utf8") as f:
+            cateogry = json.load(f)
     except FileNotFoundError:
         logger.critical("%s not found! Please parse the game bundles first.")
         sys.exit()
 
-    parse_oil_data(data)
+    parse_oil_data(data, cateogry)
     parse_recipe_data(data["src"])
     parse_weapon_data(data["src"])

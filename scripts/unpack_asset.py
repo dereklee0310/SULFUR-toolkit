@@ -16,7 +16,6 @@ OIL_NAME_REGEX = re.compile(r"Enchantment_(.*)Oil")
 
 args = parse_asset_args()
 logger = setup_logger(args.logging_level)
-print(logger.level)
 
 
 def get_bundles():
