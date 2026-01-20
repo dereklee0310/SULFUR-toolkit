@@ -2,7 +2,7 @@
 
 <h1 align="center">SULFUR Toolkit</h1>
 
-**A toolkit to extract SULFUR oil and recipe data from `.bundle` files and unpack game assets.**
+**A toolkit for extracting SULFUR weapon, oil, scroll, recipe data and unpacking game assets.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/mit)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
