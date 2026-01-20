@@ -21,6 +21,7 @@ OIL_JSON_OUTPUT_PATH = "./oils.json"
 RECIPE_JSON_OUTPUT_PATH = "./recipes.json"
 RECIPE_XLSX_OUTPUT_PATH = "./recipes.xlsx"
 WEAPON_JSON_OUTPUT_PATH = "./weapons.json"
+FINAL_RESULT_OUTPUT_PATH = "./results.json"
 
 
 SCROLL_JSON_OUTPUT_PATH = "./scrolls.json"
@@ -72,7 +73,7 @@ logger = setup_logger(args.logging_level)
 cnt = 0
 
 
-def build_oil_object(data, id_mapping, oil_id, filename_mapping):
+def build_enchantment_object(data, id_mapping, oil_id, filename_mapping):
     # Enchantment_*Oil
     oil_data = data[oil_id]
     global cnt
@@ -164,7 +165,7 @@ def dump_oil_xlsx(oil_infos, oil_groups):
 
 def parse_oil_data(data, category, id_mapping, filename_mapping):
     oil_infos = [
-        build_oil_object(data, id_mapping, oil_id, filename_mapping)
+        build_enchantment_object(data, id_mapping, oil_id, filename_mapping)
         for oil_id in category["enchantment"]["oil"]
     ]
     oil_groups = defaultdict(list)
@@ -177,18 +178,18 @@ def parse_oil_data(data, category, id_mapping, filename_mapping):
 
     dump_oil_xlsx(oil_infos, oil_groups)
 
+    return oil_infos
+
 
 def parse_scroll_data(data, category, id_mapping, filename_mapping):
-    oil_infos = [
-        build_oil_object(data, id_mapping, oil_id, filename_mapping)
+    scroll_infos = [
+        build_enchantment_object(data, id_mapping, oil_id, filename_mapping)
         for oil_id in category["enchantment"]["scroll"]
     ]
 
     with open(SCROLL_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
-        json.dump(oil_infos, f, ensure_ascii=False, indent=4)
-
-    # dump_oil_xlsx(oil_infos, oil_groups)
-
+        json.dump(scroll_infos, f, ensure_ascii=False, indent=4)
+    return scroll_infos
 
 def dump_recipe_xlsx(recipe_infos, recipes_of_items):
     with pd.ExcelWriter(RECIPE_XLSX_OUTPUT_PATH, engine="openpyxl") as writer:
@@ -276,6 +277,7 @@ def parse_recipe_data(data, filename_mapping):
         )
 
     dump_recipe_xlsx(recipe_infos, recipes_of_items)
+    return recipe_infos
 
 
 def parse_weapon_data(data, filename_mapping):
@@ -284,10 +286,11 @@ def parse_weapon_data(data, filename_mapping):
         if "slotType" in v and v["slotType"] == 7:
             weapons[v["displayName"]] = {
                 "basePrice": v["basePrice"],
-                "artwork": filename_mapping[str(v["artwork"]["m_PathID"])],
                 "maxDurability": v["maxDurability"],
-                "useType": v["useType"],  # TODO
-                "slotType": v["slotType"],  # TODO
+                "artwork": filename_mapping[str(v["artwork"]["m_PathID"])],
+                # TODO
+                "useType": v["useType"],
+                "slotType": v["slotType"],
                 # "damageType": 7,
                 # "weaponType": 10,
                 # "caliber": 5,
@@ -297,6 +300,8 @@ def parse_weapon_data(data, filename_mapping):
             }
     with open(WEAPON_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
         json.dump(weapons, f, ensure_ascii=False, indent=4)
+
+    return weapons
 
 
 if __name__ == "__main__":
@@ -317,7 +322,12 @@ if __name__ == "__main__":
         logger.critical("'%s' not found! Please parse the game bundles first.")
         sys.exit()
 
-    parse_weapon_data(data, filename_mapping)
-    # parse_oil_data(data, category, id_mapping, filename_mapping)
-    # parse_scroll_data(data, category, id_mapping, filename_mapping)
-    # parse_recipe_data(data, filename_mapping)
+    results = [
+        parse_weapon_data(data, filename_mapping),
+        parse_oil_data(data, category, id_mapping, filename_mapping),
+        parse_scroll_data(data, category, id_mapping, filename_mapping),
+    ]
+    parse_recipe_data(data, filename_mapping)
+
+    with open(FINAL_RESULT_OUTPUT_PATH, "w", encoding="utf8") as f:
+        json.dump(results, f, ensure_ascii=False, indent=4)
