@@ -14,7 +14,8 @@ from utils.utils import parse_json_args, setup_logger
 
 DATA_PATH = "./tmp/data.json"
 CATEGORY_PATH = "./tmp/category.json"
-MAPPING_PATH = "./tmp/mapping.json"
+ID_MAPPING_PATH = "./tmp/mapping.json"
+FILENAME_MAPPING_PATH = "./assets/data.json"
 OIL_XLSX_OUTPUT_PATH = "./oils.xlsx"
 OIL_JSON_OUTPUT_PATH = "./oils.json"
 RECIPE_JSON_OUTPUT_PATH = "./recipes.json"
@@ -71,12 +72,12 @@ logger = setup_logger(args.logging_level)
 cnt = 0
 
 
-def build_oil_object(data, mapping, oil_id):
+def build_oil_object(data, id_mapping, oil_id, filename_mapping):
     # Enchantment_*Oil
     oil_data = data[oil_id]
     global cnt
     cnt += 1
-    logger.info(f"Parsing {cnt:>4} %s", oil_data["displayName"])
+    logger.info(f"Parsing {cnt:>4} '%s'", oil_data["displayName"])
     result = {
         "displayName": oil_data["displayName"],
         "includedInDemo": oil_data["includedInDemo"],
@@ -84,17 +85,21 @@ def build_oil_object(data, mapping, oil_id):
         "basePrice": oil_data["basePrice"],
         **get_oil_definition(
             data,
-            mapping,
-            mapping["enchantmentDefinition"][str(oil_data["appliesEnchantment"]["value"])],
+            id_mapping,
+            id_mapping["enchantmentDefinition"][
+                str(oil_data["appliesEnchantment"]["value"])
+            ],
         ),
     }
     if args.dev:
-        result["artwork"] = str(oil_data["artwork"]["m_PathID"])
+        result["artwork"] = filename_mapping[str(oil_data["artwork"]["m_PathID"])]
 
     # df.rename and df.map are great, but we also want to dump a json file
     # so we need to format them here
     return {
-        MAPPING[k] if k in MAPPING else k: (float(f"{v:.2f}") if isinstance(v, float) else v)
+        MAPPING[k] if k in MAPPING else k: (
+            float(f"{v:.2f}") if isinstance(v, float) else v
+        )
         for k, v in result.items()
     }
 
@@ -104,9 +109,7 @@ def get_oil_definition(data, mapping, oil_definition_id):
     definition_data = data[oil_definition_id]
     return {
         "CostsDurability": definition_data["CostsDurability"],
-        **get_modifiers_definition(
-            data, mapping, definition_data["modifiersApplied"]
-        ),
+        **get_modifiers_definition(data, mapping, definition_data["modifiersApplied"]),
     }
 
 
@@ -159,9 +162,10 @@ def dump_oil_xlsx(oil_infos, oil_groups):
     adjust_width(OIL_XLSX_OUTPUT_PATH)
 
 
-def parse_oil_data(data, category, mapping):
+def parse_oil_data(data, category, id_mapping, filename_mapping):
     oil_infos = [
-        build_oil_object(data, mapping, oil_id) for oil_id in category["enchantment"]["oil"]
+        build_oil_object(data, id_mapping, oil_id, filename_mapping)
+        for oil_id in category["enchantment"]["oil"]
     ]
     oil_groups = defaultdict(list)
     for oil_info in oil_infos:
@@ -173,9 +177,11 @@ def parse_oil_data(data, category, mapping):
 
     dump_oil_xlsx(oil_infos, oil_groups)
 
-def parse_scroll_data(data, category, mapping):
+
+def parse_scroll_data(data, category, id_mapping, filename_mapping):
     oil_infos = [
-        build_oil_object(data, mapping, oil_id) for oil_id in category["enchantment"]["scroll"]
+        build_oil_object(data, id_mapping, oil_id, filename_mapping)
+        for oil_id in category["enchantment"]["scroll"]
     ]
 
     with open(SCROLL_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
@@ -202,14 +208,14 @@ def get_recipe_mapping(src_data):
     return mapping
 
 
-def build_recipe_object(src_data, mapping, recipe_data):
+def build_recipe_object(src_data, id_mapping, recipe_data, filename_mapping):
     global cnt
     cnt += 1
     # Recipe doesn't have displayName
-    logger.info(f"Parsing {cnt:>4} %s", recipe_data["name"])
+    logger.info(f"Parsing {cnt:>4} '%s'", recipe_data["name"])
     result = {
         "Recipe Name": recipe_data["name"],
-        "Item Name": src_data[mapping[recipe_data["createsItem"]["value"]]][
+        "Item Name": src_data[id_mapping[recipe_data["createsItem"]["value"]]][
             "displayName"
         ],
         "Quantity": recipe_data["quantityCreated"],
@@ -217,30 +223,43 @@ def build_recipe_object(src_data, mapping, recipe_data):
     }
 
     if args.dev:
-        result["Item Artwork"] = str(src_data[mapping[recipe_data["createsItem"]["value"]]][
-            "artwork"
-        ]["m_PathID"])
+        result["Item Artwork"] = filename_mapping[
+            str(
+                src_data[id_mapping[recipe_data["createsItem"]["value"]]]["artwork"][
+                    "m_PathID"
+                ]
+            )
+        ]
 
     for item_data in recipe_data["itemsNeeded"]:
-        real_item_data = src_data[mapping[item_data["item"]["value"]]]
+        real_item_data = src_data[id_mapping[item_data["item"]["value"]]]
         item_name = real_item_data["displayName"]
 
         if args.dev:
-            result["Items Needed"][item_name] = {
-                "Quantity": item_data["quantity"],
-                "Artwork": str(real_item_data["artwork"]["m_PathID"]),
-            }
-        else:
+            try:
+                result["Items Needed"][item_name] = {
+                    "Quantity": item_data["quantity"],
+                    "Artwork": filename_mapping[
+                        str(real_item_data["artwork"]["m_PathID"])
+                    ],
+                }
+                continue
+            except KeyError:
+                # Some items like cactus is not available now
+                logger.warning(
+                    "Artwork id not found: '%s'", real_item_data["artwork"]["m_PathID"]
+                )
             result["Items Needed"][item_name] = item_data["quantity"]
     return result
 
 
-def parse_recipe_data(src_data):
-    mapping = get_recipe_mapping(src_data)
+def parse_recipe_data(data, filename_mapping):
+    id_mapping = get_recipe_mapping(data)
 
-    recipes = src_data[RECIPE_DATABASE_ID]["recipes"]
+    recipes = data[RECIPE_DATABASE_ID]["recipes"]
     recipe_infos = [
-        build_recipe_object(src_data, mapping, recipe_data) for recipe_data in recipes
+        build_recipe_object(data, id_mapping, recipe_data, filename_mapping)
+        for recipe_data in recipes
     ]
     recipes_of_items = defaultdict(list)
     for recipe_info in recipe_infos:
@@ -259,13 +278,13 @@ def parse_recipe_data(src_data):
     dump_recipe_xlsx(recipe_infos, recipes_of_items)
 
 
-def parse_weapon_data(src_data):
+def parse_weapon_data(data, filename_mapping):
     weapons = {}
-    for k, v in src_data.items():
+    for k, v in data.items():
         if "slotType" in v and v["slotType"] == 7:
             weapons[v["displayName"]] = {
                 "basePrice": v["basePrice"],
-                "artwork": str(v["artwork"]["m_PathID"]),
+                "artwork": filename_mapping[str(v["artwork"]["m_PathID"])],
                 "maxDurability": v["maxDurability"],
                 "useType": v["useType"],  # TODO
                 "slotType": v["slotType"],  # TODO
@@ -277,26 +296,28 @@ def parse_weapon_data(src_data):
                 # "projectileType": 1,
             }
     with open(WEAPON_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
-        json.dump(
-            weapons, f, ensure_ascii=False, indent=4
-        )
+        json.dump(weapons, f, ensure_ascii=False, indent=4)
 
 
 if __name__ == "__main__":
-    logger.info("Parsing file: %s", DATA_PATH)
-    logger.info("Using category: %s", DATA_PATH)
+    logger.info("Parsing file: '%s'", DATA_PATH)
+    logger.info("Using category: '%s'", DATA_PATH)
     try:
         with open(DATA_PATH, "r", encoding="utf8") as f:
             data = json.load(f)
         with open(CATEGORY_PATH, "r", encoding="utf8") as f:
             category = json.load(f)
-        with open(MAPPING_PATH, "r", encoding="utf8") as f:
-            mapping = json.load(f)
+        with open(ID_MAPPING_PATH, "r", encoding="utf8") as f:
+            id_mapping = json.load(f)
+        filename_mapping = None
+        if args.dev:
+            with open(FILENAME_MAPPING_PATH, "r", encoding="utf8") as f:
+                filename_mapping = json.load(f)
     except FileNotFoundError:
-        logger.critical("%s not found! Please parse the game bundles first.")
+        logger.critical("'%s' not found! Please parse the game bundles first.")
         sys.exit()
 
-    parse_oil_data(data, category, mapping)
-    parse_scroll_data(data, category, mapping)
-    # parse_recipe_data(data["src"])
-    # parse_weapon_data(data["src"])
+    parse_weapon_data(data, filename_mapping)
+    # parse_oil_data(data, category, id_mapping, filename_mapping)
+    # parse_scroll_data(data, category, id_mapping, filename_mapping)
+    # parse_recipe_data(data, filename_mapping)

@@ -14,6 +14,8 @@ OUTPUT_DIR = Path("./tmp")
 # OIL_NAME_REGEX = re.compile(r"Enchantment_(.*)Oil")
 WEAPON_NAME_REGEX = re.compile(r"Weapon_(?!Gun_Shot)(.*)")  # ...Gun_Shot for npc weapon
 
+BLACKLIST = set(["Weapon_WyattPulsarNotUse", ])
+
 args = parse_bundle_args()
 logger = setup_logger(args.logging_level)
 
@@ -53,8 +55,11 @@ def parse_bundle():
         item_id = str(obj.path_id)
         item_name = tree["m_Name"]
         logger.debug("Parsing '%s'", item_name)
-        data[item_id] = tree
 
+        if item_name in BLACKLIST:
+            logger.warning("Skipping '%s'", item_name)
+            continue
+        data[item_id] = tree
 
         # Use three keys to identify an actual item, wtf perfect random
         if "displayName" in tree and "id" in tree and "artwork" in tree:
