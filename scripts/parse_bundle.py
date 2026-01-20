@@ -14,7 +14,22 @@ OUTPUT_DIR = Path("./tmp")
 # OIL_NAME_REGEX = re.compile(r"Enchantment_(.*)Oil")
 WEAPON_NAME_REGEX = re.compile(r"Weapon_(?!Gun_Shot)(.*)")  # ...Gun_Shot for npc weapon
 
-BLACKLIST = set(["Weapon_WyattPulsarNotUse", ])
+# Some of them have incorrect artwork or name, could be a deprecated or new item
+BLACKLIST = set(
+    [
+        "Weapon_WyattPulsarNotUse",
+        "Weapon_Arbiter2NotUse",
+        "Weapon_Chat-Pardeur98",
+        "Weapon_Warpig",
+        "Enchantment_TestOil",
+        "Enchantment_TestOil2",
+        "Enchantment_Satiety",
+        "Enchantment_Flutter",
+        "Enchantment_Duality",
+        "Triple Oil",
+        "Enchantment_Slayer"
+    ]
+)
 
 args = parse_bundle_args()
 logger = setup_logger(args.logging_level)
@@ -40,7 +55,13 @@ def parse_bundle():
     category = {
         "weapon": [],
         "enchantment": {"oil": [], "scroll": []},
-        "attachment": {"muzzle": [], "scope": [], "laserSight": [], "chamber": [], "insurance": []},
+        "attachment": {
+            "muzzle": [],
+            "scope": [],
+            "laserSight": [],
+            "chamber": [],
+            "insurance": [],
+        },
         "chamberChisel": [],
     }
     mapping = {"item": {}, "enchantmentDefinition": {}, "attributeModifier": {}}

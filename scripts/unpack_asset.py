@@ -60,7 +60,8 @@ def unpack_asset():
         cnt += 1
         logger.info(f"Unpacking {obj.type.name:>14} {cnt:>4}: '%s'", item_name)
         id_table[str(obj.path_id)] = item_name
-        tree.image.save(OUTPUT_DIR / f"{item_name}.png")
+        # Item name might duplicate, wtf...
+        tree.image.save(OUTPUT_DIR / f"{obj.path_id}.png")
 
     with open(OUTPUT_DIR / "data.json", "w", encoding="utf8") as f:
         json.dump(id_table, f, ensure_ascii=False, indent=4)

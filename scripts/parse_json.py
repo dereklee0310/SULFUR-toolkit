@@ -28,7 +28,7 @@ SCROLL_JSON_OUTPUT_PATH = "./scrolls.json"
 
 RECIPE_DATABASE_ID = "3425407372818098406"
 
-MAPPING = {
+COLUMN_MAPPING = {
     "displayName": "Name",
     "includedInDemo": "Demo",
     "includedInEarlyAccess": "Early Access",
@@ -63,17 +63,16 @@ MAPPING = {
     "Accuracy when moving": "Accuracy When Moving",
     "Enchantment Random Oil": "Enchantment Random Oil",
     "MISC": "MISC",  # Not a built-in one, for sheet name conversion
-    "artwork": "Artwork",
 }
 
-EFFECT_TYPES = list(MAPPING.values())[4:]
+EFFECT_TYPES = list(COLUMN_MAPPING.values())[4:]
 
 args = parse_json_args()
 logger = setup_logger(args.logging_level)
 cnt = 0
 
 
-def build_enchantment_object(data, id_mapping, oil_id, filename_mapping):
+def build_enchantment_object(data, id_mapping, oil_id):
     # Enchantment_*Oil
     oil_data = data[oil_id]
     global cnt
@@ -93,15 +92,12 @@ def build_enchantment_object(data, id_mapping, oil_id, filename_mapping):
         ),
     }
     if args.dev:
-        result["artwork"] = filename_mapping[str(oil_data["artwork"]["m_PathID"])]
+        result["artwork"] = str(oil_data["artwork"]["m_PathID"])
 
-    # df.rename and df.map are great, but we also want to dump a json file
-    # so we need to format them here
+    # Keep the original column name, only rename them when dumping to xlsx
+    # Truncate value here for both json and xlsx instead of using df.map
     return {
-        MAPPING[k] if k in MAPPING else k: (
-            float(f"{v:.2f}") if isinstance(v, float) else v
-        )
-        for k, v in result.items()
+        k: (float(f"{v:.2f}") if isinstance(v, float) else v) for k, v in result.items()
     }
 
 
@@ -156,6 +152,7 @@ def adjust_width(filename):
 def dump_oil_xlsx(oil_infos, oil_groups):
     with pd.ExcelWriter(OIL_XLSX_OUTPUT_PATH, engine="openpyxl") as writer:
         df = pd.DataFrame(oil_infos)
+        df = df.rename(columns=COLUMN_MAPPING)
         df.to_excel(writer, sheet_name="Comparison Chart", index=False)
         for group_name, oil_group_infos in oil_groups.items():
             df = pd.DataFrame(oil_group_infos)
@@ -163,9 +160,9 @@ def dump_oil_xlsx(oil_infos, oil_groups):
     adjust_width(OIL_XLSX_OUTPUT_PATH)
 
 
-def parse_oil_data(data, category, id_mapping, filename_mapping):
+def parse_oil_data(data, category, id_mapping):
     oil_infos = [
-        build_enchantment_object(data, id_mapping, oil_id, filename_mapping)
+        build_enchantment_object(data, id_mapping, oil_id)
         for oil_id in category["enchantment"]["oil"]
     ]
     oil_groups = defaultdict(list)
@@ -181,15 +178,16 @@ def parse_oil_data(data, category, id_mapping, filename_mapping):
     return oil_infos
 
 
-def parse_scroll_data(data, category, id_mapping, filename_mapping):
+def parse_scroll_data(data, category, id_mapping):
     scroll_infos = [
-        build_enchantment_object(data, id_mapping, oil_id, filename_mapping)
+        build_enchantment_object(data, id_mapping, oil_id)
         for oil_id in category["enchantment"]["scroll"]
     ]
 
     with open(SCROLL_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
         json.dump(scroll_infos, f, ensure_ascii=False, indent=4)
     return scroll_infos
+
 
 def dump_recipe_xlsx(recipe_infos, recipes_of_items):
     with pd.ExcelWriter(RECIPE_XLSX_OUTPUT_PATH, engine="openpyxl") as writer:
@@ -209,28 +207,26 @@ def get_recipe_mapping(src_data):
     return mapping
 
 
-def build_recipe_object(src_data, id_mapping, recipe_data, filename_mapping):
+def build_recipe_object(src_data, id_mapping, recipe_data):
     global cnt
     cnt += 1
     # Recipe doesn't have displayName
     logger.info(f"Parsing {cnt:>4} '%s'", recipe_data["name"])
     result = {
-        "Recipe Name": recipe_data["name"],
-        "Item Name": src_data[id_mapping[recipe_data["createsItem"]["value"]]][
+        "recipeName": recipe_data["name"],
+        "name": src_data[id_mapping[recipe_data["createsItem"]["value"]]][
             "displayName"
         ],
-        "Quantity": recipe_data["quantityCreated"],
-        "Items Needed": {},
+        "quantity": recipe_data["quantityCreated"],
+        "itemsNeeded": {},
     }
 
     if args.dev:
-        result["Item Artwork"] = filename_mapping[
-            str(
-                src_data[id_mapping[recipe_data["createsItem"]["value"]]]["artwork"][
-                    "m_PathID"
-                ]
-            )
-        ]
+        result["artwork"] = str(
+            src_data[id_mapping[recipe_data["createsItem"]["value"]]]["artwork"][
+                "m_PathID"
+            ]
+        )
 
     for item_data in recipe_data["itemsNeeded"]:
         real_item_data = src_data[id_mapping[item_data["item"]["value"]]]
@@ -238,11 +234,9 @@ def build_recipe_object(src_data, id_mapping, recipe_data, filename_mapping):
 
         if args.dev:
             try:
-                result["Items Needed"][item_name] = {
-                    "Quantity": item_data["quantity"],
-                    "Artwork": filename_mapping[
-                        str(real_item_data["artwork"]["m_PathID"])
-                    ],
+                result["itemsNeeded"][item_name] = {
+                    "quantity": item_data["quantity"],
+                    "artwork": str(real_item_data["artwork"]["m_PathID"]),
                 }
                 continue
             except KeyError:
@@ -250,24 +244,24 @@ def build_recipe_object(src_data, id_mapping, recipe_data, filename_mapping):
                 logger.warning(
                     "Artwork id not found: '%s'", real_item_data["artwork"]["m_PathID"]
                 )
-            result["Items Needed"][item_name] = item_data["quantity"]
+            result["itemsNeeded"][item_name] = item_data["quantity"]
     return result
 
 
-def parse_recipe_data(data, filename_mapping):
+def parse_recipe_data(data):
     id_mapping = get_recipe_mapping(data)
 
     recipes = data[RECIPE_DATABASE_ID]["recipes"]
     recipe_infos = [
-        build_recipe_object(data, id_mapping, recipe_data, filename_mapping)
+        build_recipe_object(data, id_mapping, recipe_data)
         for recipe_data in recipes
     ]
     recipes_of_items = defaultdict(list)
     for recipe_info in recipe_infos:
-        recipes_of_items[recipe_info["Item Name"]].append(
+        recipes_of_items[recipe_info["name"]].append(
             {
-                "Quantity": recipe_info["Quantity"],
-                "Items Needed": recipe_info["Items Needed"],
+                "quantity": recipe_info["quantity"],
+                "itemsNeeded": recipe_info["itemsNeeded"],
             }
         )
 
@@ -280,24 +274,27 @@ def parse_recipe_data(data, filename_mapping):
     return recipe_infos
 
 
-def parse_weapon_data(data, filename_mapping):
-    weapons = {}
+def parse_weapon_data(data):
+    weapons = []
     for k, v in data.items():
         if "slotType" in v and v["slotType"] == 7:
-            weapons[v["displayName"]] = {
-                "basePrice": v["basePrice"],
-                "maxDurability": v["maxDurability"],
-                "artwork": filename_mapping[str(v["artwork"]["m_PathID"])],
-                # TODO
-                "useType": v["useType"],
-                "slotType": v["slotType"],
-                # "damageType": 7,
-                # "weaponType": 10,
-                # "caliber": 5,
-                # "damageMultiplier": 1.0,
-                # "usableByPlayer": 1,
-                # "projectileType": 1,
-            }
+            weapons.append(
+                {
+                    "displayName": v["displayName"],
+                    "basePrice": v["basePrice"],
+                    "maxDurability": v["maxDurability"],
+                    "artwork": str(v["artwork"]["m_PathID"]),
+                    # TODO
+                    "useType": v["useType"],
+                    "slotType": v["slotType"],
+                    # "damageType": 7,
+                    # "weaponType": 10,
+                    # "caliber": 5,
+                    # "damageMultiplier": 1.0,
+                    # "usableByPlayer": 1,
+                    # "projectileType": 1,
+                }
+            )
     with open(WEAPON_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
         json.dump(weapons, f, ensure_ascii=False, indent=4)
 
@@ -314,20 +311,20 @@ if __name__ == "__main__":
             category = json.load(f)
         with open(ID_MAPPING_PATH, "r", encoding="utf8") as f:
             id_mapping = json.load(f)
-        filename_mapping = None
-        if args.dev:
-            with open(FILENAME_MAPPING_PATH, "r", encoding="utf8") as f:
-                filename_mapping = json.load(f)
+        # filename_mapping = None
+        # if args.dev:
+        #     with open(FILENAME_MAPPING_PATH, "r", encoding="utf8") as f:
+        #         filename_mapping = json.load(f)
     except FileNotFoundError:
         logger.critical("'%s' not found! Please parse the game bundles first.")
         sys.exit()
 
     results = [
-        parse_weapon_data(data, filename_mapping),
-        parse_oil_data(data, category, id_mapping, filename_mapping),
-        parse_scroll_data(data, category, id_mapping, filename_mapping),
+        *parse_weapon_data(data),
+        *parse_oil_data(data, category, id_mapping),
+        *parse_scroll_data(data, category, id_mapping),
     ]
-    parse_recipe_data(data, filename_mapping)
+    parse_recipe_data(data)
 
     with open(FINAL_RESULT_OUTPUT_PATH, "w", encoding="utf8") as f:
         json.dump(results, f, ensure_ascii=False, indent=4)
