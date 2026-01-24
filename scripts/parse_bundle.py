@@ -27,7 +27,13 @@ BLACKLIST = set(
         "Enchantment_Flutter",
         "Enchantment_Duality",
         "Triple Oil",
-        "Enchantment_Slayer"
+        "Enchantment_Slayer",
+        "Enchantment_FastForwardOil",
+        "Enchantment_Steam",
+        "Enchantment_EternalOil",
+        "Enchantment_SlowMoOil",
+        "Enchantment_UnlabeledOil",
+        "Weapon_RamshackOld_NOT_USED"
     ]
 )
 

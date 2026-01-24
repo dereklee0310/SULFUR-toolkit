@@ -16,17 +16,19 @@ DATA_PATH = "./tmp/data.json"
 CATEGORY_PATH = "./tmp/category.json"
 ID_MAPPING_PATH = "./tmp/mapping.json"
 FILENAME_MAPPING_PATH = "./assets/data.json"
-OIL_XLSX_OUTPUT_PATH = "./oils.xlsx"
-OIL_JSON_OUTPUT_PATH = "./oils.json"
-RECIPE_JSON_OUTPUT_PATH = "./recipes.json"
-RECIPE_XLSX_OUTPUT_PATH = "./recipes.xlsx"
-WEAPON_JSON_OUTPUT_PATH = "./weapons.json"
-FINAL_RESULT_OUTPUT_PATH = "./results.json"
+OIL_XLSX_PATH = "./oils.xlsx"
+OIL_JSON_PATH = "./oils.json"
+RECIPE_JSON_PATH = "./recipes.json"
+RECIPE_XLSX_PATH = "./recipes.xlsx"
+WEAPON_JSON_PATH = "./weapons.json"
+CHAMBER_CHISEL_JSON_PATH = "./weapons.json"
+FINAL_RESULT_PATH = "./results.json"
 
 
-SCROLL_JSON_OUTPUT_PATH = "./scrolls.json"
+SCROLL_JSON_PATH = "./scrolls.json"
 
 RECIPE_DATABASE_ID = "3425407372818098406"
+I2_LANGUAGES_ID = "-4669794531358937986"
 
 COLUMN_MAPPING = {
     "displayName": "Name",
@@ -72,7 +74,7 @@ logger = setup_logger(args.logging_level)
 cnt = 0
 
 
-def build_enchantment_object(data, id_mapping, oil_id):
+def build_enchantment_object(oil_id):
     # Enchantment_*Oil
     oil_data = data[oil_id]
     global cnt
@@ -83,16 +85,20 @@ def build_enchantment_object(data, id_mapping, oil_id):
         "includedInDemo": oil_data["includedInDemo"],
         "includedInEarlyAccess": oil_data["includedInEarlyAccess"],
         "basePrice": oil_data["basePrice"],
-        **get_oil_definition(
-            data,
-            id_mapping,
-            id_mapping["enchantmentDefinition"][
-                str(oil_data["appliesEnchantment"]["value"])
-            ],
-        ),
     }
+
+    oil_definition = get_oil_definition(
+        data,
+        id_mapping,
+        id_mapping["enchantmentDefinition"][
+            str(oil_data["appliesEnchantment"]["value"])
+        ],
+    )
+    result |= oil_definition
+
     if args.dev:
         result["artwork"] = str(oil_data["artwork"]["m_PathID"])
+        result["definition"] = oil_definition  # For structural parsing
 
     # Keep the original column name, only rename them when dumping to xlsx
     # Truncate value here for both json and xlsx instead of using df.map
@@ -150,19 +156,22 @@ def adjust_width(filename):
 
 
 def dump_oil_xlsx(oil_infos, oil_groups):
-    with pd.ExcelWriter(OIL_XLSX_OUTPUT_PATH, engine="openpyxl") as writer:
+    with pd.ExcelWriter(OIL_XLSX_PATH, engine="openpyxl") as writer:
         df = pd.DataFrame(oil_infos)
         df = df.rename(columns=COLUMN_MAPPING)
         df.to_excel(writer, sheet_name="Comparison Chart", index=False)
         for group_name, oil_group_infos in oil_groups.items():
             df = pd.DataFrame(oil_group_infos)
             df.to_excel(writer, sheet_name=group_name, index=False)
-    adjust_width(OIL_XLSX_OUTPUT_PATH)
+    adjust_width(OIL_XLSX_PATH)
 
 
-def parse_oil_data(data, category, id_mapping):
+def parse_oil_data():
     oil_infos = [
-        build_enchantment_object(data, id_mapping, oil_id)
+        (
+            build_enchantment_object(oil_id)
+            | ({"id": oil_id} if args.dev else None)
+        )
         for oil_id in category["enchantment"]["oil"]
     ]
     oil_groups = defaultdict(list)
@@ -170,7 +179,7 @@ def parse_oil_data(data, category, id_mapping):
         for type in get_oil_types(oil_info):
             oil_groups[type].append(oil_info)
 
-    with open(OIL_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
+    with open(OIL_JSON_PATH, "w", encoding="utf8") as f:
         json.dump({"all": oil_infos} | oil_groups, f, ensure_ascii=False, indent=4)
 
     dump_oil_xlsx(oil_infos, oil_groups)
@@ -178,24 +187,25 @@ def parse_oil_data(data, category, id_mapping):
     return oil_infos
 
 
-def parse_scroll_data(data, category, id_mapping):
+def parse_scroll_data():
     scroll_infos = [
-        build_enchantment_object(data, id_mapping, oil_id)
-        for oil_id in category["enchantment"]["scroll"]
+        build_enchantment_object(scroll_id)
+        | ({"id": scroll_id} if args.dev else None)
+        for scroll_id in category["enchantment"]["scroll"]
     ]
 
-    with open(SCROLL_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
+    with open(SCROLL_JSON_PATH, "w", encoding="utf8") as f:
         json.dump(scroll_infos, f, ensure_ascii=False, indent=4)
     return scroll_infos
 
 
 def dump_recipe_xlsx(recipe_infos, recipes_of_items):
-    with pd.ExcelWriter(RECIPE_XLSX_OUTPUT_PATH, engine="openpyxl") as writer:
+    with pd.ExcelWriter(RECIPE_XLSX_PATH, engine="openpyxl") as writer:
         df = pd.DataFrame(recipe_infos)
         df.to_excel(writer, sheet_name="Recipes", index=False)
         df = pd.DataFrame.from_dict(recipes_of_items, orient="index")
         df.to_excel(writer, sheet_name="Recipes of Items")
-    adjust_width(RECIPE_XLSX_OUTPUT_PATH)
+    adjust_width(RECIPE_XLSX_PATH)
 
 
 def get_recipe_mapping(src_data):
@@ -253,8 +263,7 @@ def parse_recipe_data(data):
 
     recipes = data[RECIPE_DATABASE_ID]["recipes"]
     recipe_infos = [
-        build_recipe_object(data, id_mapping, recipe_data)
-        for recipe_data in recipes
+        build_recipe_object(data, id_mapping, recipe_data) for recipe_data in recipes
     ]
     recipes_of_items = defaultdict(list)
     for recipe_info in recipe_infos:
@@ -265,7 +274,7 @@ def parse_recipe_data(data):
             }
         )
 
-    with open(RECIPE_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
+    with open(RECIPE_JSON_PATH, "w", encoding="utf8") as f:
         json.dump(
             {"all": recipe_infos} | recipes_of_items, f, ensure_ascii=False, indent=4
         )
@@ -274,19 +283,23 @@ def parse_recipe_data(data):
     return recipe_infos
 
 
-def parse_weapon_data(data):
-    weapons = []
-    for k, v in data.items():
-        if "slotType" in v and v["slotType"] == 7:
-            weapons.append(
+def parse_weapon_data():
+    results = []
+    global cnt
+    for item_id in category["weapon"]:
+        item_data = data[item_id]
+        cnt += 1
+        # Might include throwables
+        if "slotType" in item_data and item_data["slotType"] == 7:
+            logger.info(f"Parsing {cnt:>4} '%s'", item_data["m_Name"])
+            results.append(
                 {
-                    "displayName": v["displayName"],
-                    "basePrice": v["basePrice"],
-                    "maxDurability": v["maxDurability"],
-                    "artwork": str(v["artwork"]["m_PathID"]),
+                    "displayName": item_data["displayName"],
+                    "basePrice": item_data["basePrice"],
+                    "maxDurability": item_data["maxDurability"],
                     # TODO
-                    "useType": v["useType"],
-                    "slotType": v["slotType"],
+                    "useType": item_data["useType"],
+                    "slotType": item_data["slotType"],
                     # "damageType": 7,
                     # "weaponType": 10,
                     # "caliber": 5,
@@ -294,11 +307,57 @@ def parse_weapon_data(data):
                     # "usableByPlayer": 1,
                     # "projectileType": 1,
                 }
+                | (
+                    {
+                        "artwork": str(item_data["artwork"]["m_PathID"]),
+                        "id": item_id,
+                        "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"][0],
+                    }
+                    if args.dev
+                    else None
+                )
             )
-    with open(WEAPON_JSON_OUTPUT_PATH, "w", encoding="utf8") as f:
-        json.dump(weapons, f, ensure_ascii=False, indent=4)
 
-    return weapons
+    with open(WEAPON_JSON_PATH, "w", encoding="utf8") as f:
+        json.dump(results, f, ensure_ascii=False, indent=4)
+
+    return results
+
+
+def get_flavors(data):
+    flavors = data[I2_LANGUAGES_ID]["mSource"]["mTerms"]  # I2Languages
+    return {flavor["Term"]: flavor["Languages"] for flavor in flavors}
+
+
+def parse_chamber_chisel():
+    results = []
+    global cnt
+    for item_id in category["chamberChisel"]:
+        item_data = data[item_id]
+        cnt += 1
+        logger.info(f"Parsing {cnt:>4} '%s'", item_data["m_Name"])
+        results.append(
+            {
+                "displayName": item_data["displayName"],
+                "basePrice": item_data["basePrice"],
+                "useType": item_data["useType"],
+                "modifiesCaliber": item_data["modifiesCaliber"]
+            }
+            | (
+                {
+                    "artwork": str(item_data["artwork"]["m_PathID"]),
+                    "id": item_id,
+                    "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"][0],
+                }
+                if args.dev
+                else None
+            )
+        )
+
+    with open(CHAMBER_CHISEL_JSON_PATH, "w", encoding="utf8") as f:
+        json.dump(results, f, ensure_ascii=False, indent=4)
+
+    return results
 
 
 if __name__ == "__main__":
@@ -318,13 +377,21 @@ if __name__ == "__main__":
     except FileNotFoundError:
         logger.critical("'%s' not found! Please parse the game bundles first.")
         sys.exit()
+    flavors = get_flavors(data)
 
-    results = [
-        *parse_weapon_data(data),
-        *parse_oil_data(data, category, id_mapping),
-        *parse_scroll_data(data, category, id_mapping),
+    final_results = [
+        *parse_chamber_chisel(),
+        *parse_weapon_data(),
+        *parse_oil_data(),
+        *parse_scroll_data(),
     ]
     parse_recipe_data(data)
 
-    with open(FINAL_RESULT_OUTPUT_PATH, "w", encoding="utf8") as f:
-        json.dump(results, f, ensure_ascii=False, indent=4)
+    for result in final_results:
+        # displayName is not fucking reliable
+        try:
+            result["displayName"] = flavors[f"Items/{data[result['id']]['m_Name']}"][0]
+        except KeyError:
+            print(result["displayName"])
+    with open(FINAL_RESULT_PATH, "w", encoding="utf8") as f:
+        json.dump(final_results, f, ensure_ascii=False, indent=4)
