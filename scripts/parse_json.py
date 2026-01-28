@@ -15,7 +15,6 @@ from utils.utils import parse_json_args, setup_logger
 DATA_PATH = "./tmp/data.json"
 CATEGORY_PATH = "./tmp/category.json"
 ID_MAPPING_PATH = "./tmp/mapping.json"
-FILENAME_MAPPING_PATH = "./assets/data.json"
 OIL_XLSX_PATH = "./oils.xlsx"
 OIL_JSON_PATH = "./oils.json"
 RECIPE_JSON_PATH = "./recipes.json"
@@ -23,6 +22,7 @@ RECIPE_XLSX_PATH = "./recipes.xlsx"
 WEAPON_JSON_PATH = "./weapons.json"
 CHAMBER_CHISEL_JSON_PATH = "./weapons.json"
 FINAL_RESULT_PATH = "./results.json"
+FLAVOR_PATH = "./flavors.json"
 
 
 SCROLL_JSON_PATH = "./scrolls.json"
@@ -67,6 +67,31 @@ COLUMN_MAPPING = {
     "MISC": "MISC",  # Not a built-in one, for sheet name conversion
 }
 
+# ItemDescriptions/WeaponType_Pistol
+WEAPON_TYPE = {
+    1: "AssaultRifle",
+    3: "LMG",
+    4: "Melee",
+    5: "Pistol",
+    6: "Revolver",
+    7: "Rifle",
+    8: "Shotgun",
+    9: "SMG",
+    10: "Sniper",
+    11: "Throwable",
+}
+
+# WorldResource/Resource_Ammo_12Ga_short
+AMMO_TYPE = {
+    # 0 for Melee
+    1: "9mm",
+    2: "12Ga",
+    3: "556",
+    4: "762",
+    5: "50BMG",
+    7: "EnergyCell",
+}
+
 EFFECT_TYPES = list(COLUMN_MAPPING.values())[4:]
 
 args = parse_json_args()
@@ -74,56 +99,68 @@ logger = setup_logger(args.logging_level)
 cnt = 0
 
 
-def build_enchantment_object(oil_id):
-    # Enchantment_*Oil
-    oil_data = data[oil_id]
+def build_enchantment_object(item_id):
+    item_data = data[item_id]
     global cnt
     cnt += 1
-    logger.info(f"Parsing {cnt:>4} '%s'", oil_data["displayName"])
-    result = {
-        "displayName": oil_data["displayName"],
-        "includedInDemo": oil_data["includedInDemo"],
-        "includedInEarlyAccess": oil_data["includedInEarlyAccess"],
-        "basePrice": oil_data["basePrice"],
+    logger.info(f"Parsing {cnt:>4} '%s'", item_data["displayName"])
+    results = {
+        "displayName": item_data["displayName"],
+        "includedInDemo": item_data["includedInDemo"],
+        "includedInEarlyAccess": item_data["includedInEarlyAccess"],
+        "basePrice": item_data["basePrice"],
     }
 
-    oil_definition = get_oil_definition(
-        data,
-        id_mapping,
+    item_definition = get_enchantment_definition(
         id_mapping["enchantmentDefinition"][
-            str(oil_data["appliesEnchantment"]["value"])
+            str(item_data["appliesEnchantment"]["value"])
         ],
     )
-    result |= oil_definition
+    results |= item_definition
 
     if args.dev:
-        result["artwork"] = str(oil_data["artwork"]["m_PathID"])
-        result["definition"] = oil_definition  # For structural parsing
+        results["artwork"] = str(item_data["artwork"]["m_PathID"])
+        results["definition"] = item_definition  # For structural parsing
 
-    # Keep the original column name, only rename them when dumping to xlsx
-    # Truncate value here for both json and xlsx instead of using df.map
-    return {
-        k: (float(f"{v:.2f}") if isinstance(v, float) else v) for k, v in result.items()
-    }
+    return results
 
 
-def get_oil_definition(data, mapping, oil_definition_id):
+def format_value(value):
+    return float(f"{value:.2f}") if isinstance(value, float) else value
+
+
+def get_enchantment_definition(oil_definition_id):
     # EnchantmentDefinition_*Oil
     definition_data = data[oil_definition_id]
     return {
         "CostsDurability": definition_data["CostsDurability"],
-        **get_modifiers_definition(data, mapping, definition_data["modifiersApplied"]),
+        **get_modifiers_definition(definition_data["modifiersApplied"]),
     }
 
 
-def get_modifiers_definition(data, mapping, modifiers):
+def get_modifiers_definition(modifiers):
     results = {}
     for modifier in modifiers:
-        # itemDescriptionName is not reliable, use label instead
-        name = data[mapping["attributeModifier"][str(modifier["attribute"])]]["label"]
+        # itemDescriptionName and label not reliable, use m_Name instead
+        # ItemAttributes/ConsumeAmmoChance_itemDescription
+        # ItemAttributes/ConsumeAmmoChance_label
+        name = data[id_mapping["attributeModifier"][str(modifier["attribute"])]]["m_Name"]
+        # try:
+        #     name = flavors[
+        #         f"ItemAttributes/{data[id_mapping['attributeModifier'][str(modifier['attribute'])]]['m_Name']}_label"
+        #     ]
+        # except KeyError:
+        #     logger.warning("Cannot find label")
+        #     name = flavors["ItemAttributes/ProjectilieFlameThrower_label"][
+        #         0
+        #     ]  # Hard code this typo dog shit
         # 100: boolean/add, 200: multiplier, 300: bullet size
-        mod_type = modifier["modType"]
-        value = modifier["value"]
+        try:
+            mod_type = modifier["modType"]
+        except KeyError:
+            logger.warning("modType not found!")
+            mod_type = 0
+        value = format_value(modifier["value"])
         if name == "Damage" and mod_type == 200:
             results["Damage%"] = value
         else:
@@ -166,37 +203,27 @@ def dump_oil_xlsx(oil_infos, oil_groups):
     adjust_width(OIL_XLSX_PATH)
 
 
-def parse_oil_data():
-    oil_infos = [
+def parse_enchantment_data(type, item_ids):
+    item_infos = [
         (
-            build_enchantment_object(oil_id)
-            | ({"id": oil_id} if args.dev else None)
+            build_enchantment_object(item_id)
+            | ({"id": item_id, "type": type} if args.dev else None)
         )
-        for oil_id in category["enchantment"]["oil"]
+        for item_id in item_ids
     ]
     oil_groups = defaultdict(list)
-    for oil_info in oil_infos:
+    for oil_info in item_infos:
         for type in get_oil_types(oil_info):
             oil_groups[type].append(oil_info)
 
-    with open(OIL_JSON_PATH, "w", encoding="utf8") as f:
-        json.dump({"all": oil_infos} | oil_groups, f, ensure_ascii=False, indent=4)
-
-    dump_oil_xlsx(oil_infos, oil_groups)
-
-    return oil_infos
-
-
-def parse_scroll_data():
-    scroll_infos = [
-        build_enchantment_object(scroll_id)
-        | ({"id": scroll_id} if args.dev else None)
-        for scroll_id in category["enchantment"]["scroll"]
-    ]
-
-    with open(SCROLL_JSON_PATH, "w", encoding="utf8") as f:
-        json.dump(scroll_infos, f, ensure_ascii=False, indent=4)
-    return scroll_infos
+    if type == "oil":
+        with open(OIL_JSON_PATH, "w", encoding="utf8") as f:
+            json.dump({"all": item_infos} | oil_groups, f, ensure_ascii=False, indent=4)
+        dump_oil_xlsx(item_infos, oil_groups)
+    else:
+        with open(SCROLL_JSON_PATH, "w", encoding="utf8") as f:
+            json.dump({"all": item_infos} | oil_groups, f, ensure_ascii=False, indent=4)
+    return item_infos
 
 
 def dump_recipe_xlsx(recipe_infos, recipes_of_items):
@@ -283,10 +310,10 @@ def parse_recipe_data(data):
     return recipe_infos
 
 
-def parse_weapon_data():
+def parse_weapon_data(type, item_ids):
     results = []
     global cnt
-    for item_id in category["weapon"]:
+    for item_id in item_ids:
         item_data = data[item_id]
         cnt += 1
         # Might include throwables
@@ -297,26 +324,41 @@ def parse_weapon_data():
                     "displayName": item_data["displayName"],
                     "basePrice": item_data["basePrice"],
                     "maxDurability": item_data["maxDurability"],
-                    # TODO
-                    "useType": item_data["useType"],
-                    "slotType": item_data["slotType"],
-                    # "damageType": 7,
-                    # "weaponType": 10,
-                    # "caliber": 5,
-                    # "damageMultiplier": 1.0,
-                    # "usableByPlayer": 1,
-                    # "projectileType": 1,
+                    "iAmmoMax": item_data["iAmmoMax"],
+                    "fReloadTime": item_data["fReloadTime"],
+                    "rpm": item_data["rpm"],
+                    # "weaponType": item_data['weaponType'],
+                    "weaponType": flavors[
+                        f"ItemDescriptions/WeaponType_{WEAPON_TYPE[item_data['weaponType']]}"
+                    ],
+                    "caliber": item_data['caliber'],
+                    # "caliber": flavors[
+                    #     f"WorldResource/Resource_Ammo_{AMMO_TYPE[item_data['caliber']]}_short"
+                    # ],
+                    "damageMultiplier": format_value(item_data["damageMultiplier"]),
+                    **get_modifiers_definition(item_data["baseAttributes"]),
                 }
                 | (
                     {
                         "artwork": str(item_data["artwork"]["m_PathID"]),
                         "id": item_id,
-                        "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"][0],
+                        "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"],
+                        "type": type,
                     }
                     if args.dev
                     else None
                 )
             )
+            # 58: spread, 18: kick
+            #         "baseAttributes": [
+            # {
+            #     "attribute": 58,
+            #     "value": 2.0
+            # },
+            # {
+            #     "attribute": 18,
+            #     "value": 0.0
+            # }
 
     with open(WEAPON_JSON_PATH, "w", encoding="utf8") as f:
         json.dump(results, f, ensure_ascii=False, indent=4)
@@ -326,13 +368,13 @@ def parse_weapon_data():
 
 def get_flavors(data):
     flavors = data[I2_LANGUAGES_ID]["mSource"]["mTerms"]  # I2Languages
-    return {flavor["Term"]: flavor["Languages"] for flavor in flavors}
+    return {flavor["Term"]: flavor["Languages"][0] for flavor in flavors}
 
 
-def parse_chamber_chisel():
+def parse_chamber_chisel(type, item_ids):
     results = []
     global cnt
-    for item_id in category["chamberChisel"]:
+    for item_id in item_ids:
         item_data = data[item_id]
         cnt += 1
         logger.info(f"Parsing {cnt:>4} '%s'", item_data["m_Name"])
@@ -340,14 +382,17 @@ def parse_chamber_chisel():
             {
                 "displayName": item_data["displayName"],
                 "basePrice": item_data["basePrice"],
-                "useType": item_data["useType"],
-                "modifiesCaliber": item_data["modifiesCaliber"]
+                "modifiesCaliber": item_data['modifiesCaliber']
+                # "modifiesCaliber": flavors[
+                #     f"WorldResource/Resource_Ammo_{AMMO_TYPE[item_data['modifiesCaliber']]}_short"
+                # ],
             }
             | (
                 {
                     "artwork": str(item_data["artwork"]["m_PathID"]),
                     "id": item_id,
-                    "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"][0],
+                    "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"],
+                    "type": type,
                 }
                 if args.dev
                 else None
@@ -357,6 +402,42 @@ def parse_chamber_chisel():
     with open(CHAMBER_CHISEL_JSON_PATH, "w", encoding="utf8") as f:
         json.dump(results, f, ensure_ascii=False, indent=4)
 
+    return results
+
+
+def parse_item_data(category, results):
+    for k, v in category.items():
+        if isinstance(v, dict):
+            parse_item_data(v, results)
+        else:  # k is a list
+            # "useType" cannot tell oil and scroll apart, use self-defined useType instead
+            results.extend(parse_functions[k](k, v))
+
+
+def parse_attachment_data(type, item_ids):
+    results = []
+    global cnt
+    for item_id in item_ids:
+        item_data = data[item_id]
+        cnt += 1
+        logger.info(f"Parsing {cnt:>4} '%s'", item_data["m_Name"])
+        results.append(
+            {
+                "displayName": item_data["displayName"],
+                "basePrice": item_data["basePrice"],
+                **get_modifiers_definition(item_data["modifiersOnAttachToItem"]),
+            }
+            | (
+                {
+                    "artwork": str(item_data["artwork"]["m_PathID"]),
+                    "id": item_id,
+                    "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"],
+                    "type": type,
+                }
+                if args.dev
+                else None
+            )
+        )
     return results
 
 
@@ -370,28 +451,36 @@ if __name__ == "__main__":
             category = json.load(f)
         with open(ID_MAPPING_PATH, "r", encoding="utf8") as f:
             id_mapping = json.load(f)
-        # filename_mapping = None
-        # if args.dev:
-        #     with open(FILENAME_MAPPING_PATH, "r", encoding="utf8") as f:
-        #         filename_mapping = json.load(f)
     except FileNotFoundError:
         logger.critical("'%s' not found! Please parse the game bundles first.")
         sys.exit()
     flavors = get_flavors(data)
 
-    final_results = [
-        *parse_chamber_chisel(),
-        *parse_weapon_data(),
-        *parse_oil_data(),
-        *parse_scroll_data(),
-    ]
+    parse_functions = {
+        "weapon": parse_weapon_data,
+        "chamberChisel": parse_chamber_chisel,
+        "oil": parse_enchantment_data,
+        "scroll": parse_enchantment_data,
+        "muzzle": parse_attachment_data,
+        "scope": parse_attachment_data,
+        "laserSight": parse_attachment_data,
+        "chamber": parse_attachment_data,
+        "insurance": parse_attachment_data,
+    }
+
+    final_results = []
+    parse_item_data(category, final_results)
     parse_recipe_data(data)
 
     for result in final_results:
         # displayName is not fucking reliable
         try:
-            result["displayName"] = flavors[f"Items/{data[result['id']]['m_Name']}"][0]
+            result["displayName"] = flavors[f"Items/{data[result['id']]['m_Name']}"]
         except KeyError:
             print(result["displayName"])
     with open(FINAL_RESULT_PATH, "w", encoding="utf8") as f:
         json.dump(final_results, f, ensure_ascii=False, indent=4)
+
+    with open(FLAVOR_PATH, "w", encoding="utf8") as f:
+        json.dump(flavors, f, ensure_ascii=False, indent=4)
+
