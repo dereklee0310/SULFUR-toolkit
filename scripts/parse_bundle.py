@@ -21,19 +21,20 @@ BLACKLIST = set(
         "Weapon_Arbiter2NotUse",
         "Weapon_Chat-Pardeur98",
         "Weapon_Warpig",
+        "Weapon_RamshackOld_NOT_USED"
         "Enchantment_TestOil",
         "Enchantment_TestOil2",
         "Enchantment_Satiety",
         "Enchantment_Flutter",
         "Enchantment_Duality",
-        "Triple Oil",
+        "Enchantment_ForceOil"
+        "EnchantmentDefinition_Trinity",
         "Enchantment_Slayer",
         "Enchantment_FastForwardOil",
         "Enchantment_Steam",
         "Enchantment_EternalOil",
         "Enchantment_SlowMoOil",
         "Enchantment_UnlabeledOil",
-        "Weapon_RamshackOld_NOT_USED"
     ]
 )
 
