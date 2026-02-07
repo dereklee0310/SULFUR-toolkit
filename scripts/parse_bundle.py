@@ -21,20 +21,23 @@ BLACKLIST = set(
         "Weapon_Arbiter2NotUse",
         "Weapon_Chat-Pardeur98",
         "Weapon_Warpig",
-        "Weapon_RamshackOld_NOT_USED"
+        "Weapon_RamshackOld_NOT_USED",
         "Enchantment_TestOil",
         "Enchantment_TestOil2",
         "Enchantment_Satiety",
         "Enchantment_Flutter",
         "Enchantment_Duality",
         "Enchantment_ForceOil"
-        "EnchantmentDefinition_Trinity",
+        "Enchantment_Trinity",
         "Enchantment_Slayer",
         "Enchantment_FastForwardOil",
         "Enchantment_Steam",
         "Enchantment_EternalOil",
         "Enchantment_SlowMoOil",
         "Enchantment_UnlabeledOil",
+        "Enchantment_Brutality",
+        "Enchantment_Big",
+        "Enchantment_Bounce",
     ]
 )
 
@@ -101,7 +104,7 @@ def parse_bundle():
         cnt += 1
         if item_name.startswith("Enchantment_"):
             logger.info(f"Found    enchantment {cnt:>3}: '%s'", item_name)
-            if item_name.endswith("Oil"):
+            if item_name.endswith("Oil") or item_name == "Enchantment_FeatureGun":
                 category["enchantment"]["oil"].append(item_id)
             else:
                 category["enchantment"]["scroll"].append(item_id)

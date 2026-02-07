@@ -41,7 +41,7 @@ COLUMN_MAPPING = {
     "Loot Chance Multiplier": "Loot Chance Multiplier",
     "Bullet bounces": "Bullet Bounces",
     "Time scale": "Bullet Speed",
-    "Damage%": "Damage%",
+    # "Damage%": "Damage%",
     "Bullet size": "Bullet Size",
     "Bullet drop": "Bullet Drop",
     "No money drops": "No Money Drops",
@@ -66,14 +66,14 @@ COLUMN_MAPPING = {
 WEAPON_TYPE = {
     1: "AssaultRifle",
     3: "LMG",
-    4: "Melee",
+    # 4: "Melee",
     5: "Pistol",
     6: "Revolver",
     7: "Rifle",
     8: "Shotgun",
     9: "SMG",
     10: "Sniper",
-    11: "Throwable",
+    # 11: "Throwable",
 }
 
 # WorldResource/Resource_Ammo_12Ga_short
@@ -85,6 +85,18 @@ AMMO_TYPE = {
     4: "762",
     5: "50BMG",
     7: "EnergyCell",
+}
+
+DAMAGE_MULTIPLIERS = {
+    "caliber": {
+        1: (60, 1),
+        2: (20, 8),
+        3: (80, 1),
+        4: (100, 1),
+        5: (200, 1),
+        7: (50, 1),
+    },
+    "weaponType": {1: 1.2, 3: 1.0, 5: 1.0, 6: 1.6, 7: 2.0, 8: 1.0, 9: 1.0, 10: 2.0},
 }
 
 EFFECT_TYPES = list(COLUMN_MAPPING.values())[4:]
@@ -114,7 +126,7 @@ def build_enchantment_object(type, item_id):
 
     if args.dev:
         results["artwork"] = str(item_data["artwork"]["m_PathID"])
-        results["definition"] = item_definition  # For structural parsing
+        # results["definition"] = item_definition  # For structural parsing
 
     return results
 
@@ -126,9 +138,11 @@ def format_value(value):
 def get_enchantment_definition(oil_definition_id):
     # EnchantmentDefinition_*Oil
     definition_data = data[oil_definition_id]
+    modifier_definitions = get_modifiers_definition(definition_data["modifiersApplied"])
     return {
         "CostsDurability": definition_data["CostsDurability"],
-        **get_modifiers_definition(definition_data["modifiersApplied"]),
+        **modifier_definitions,
+        "displayFields": list(modifier_definitions),
     }
 
 
@@ -151,16 +165,16 @@ def get_modifiers_definition(modifiers):
         #         0
         #     ]  # Hard code this typo dog shit
         # 100: boolean/add, 200: multiplier, 300: bullet size
-        try:
-            mod_type = modifier["modType"]
-        except KeyError:
-            logger.warning("modType not found!")
-            mod_type = 0
+        # try:
+        #     mod_type = modifier["modType"]
+        # except KeyError:
+        #     logger.warning("modType not found!")
+        #     mod_type = 0
         value = format_value(modifier["value"])
-        if name == "Damage" and mod_type == 200:
-            results["Damage%"] = value
-        else:
-            results[name] = value
+        # if name == "Damage" and mod_type == 200:
+        #     results["Damage%"] = value
+        # else:
+        results[name] = value
     return results
 
 
@@ -297,6 +311,15 @@ def parse_recipe_data(data):
     return recipe_infos
 
 
+def get_damage(caliber, weapon_type, damage_multiplier, ammo_multiplier, ammo_overwrite=None):
+    damage, ammo_per_shot = DAMAGE_MULTIPLIERS["caliber"][caliber]
+    ammo_per_shot = ammo_overwrite if ammo_overwrite else ammo_per_shot
+    return (
+        damage * DAMAGE_MULTIPLIERS["weaponType"][weapon_type] * damage_multiplier,
+        ammo_per_shot * ammo_multiplier,
+    )
+
+
 def parse_weapon_data(type, item_ids):
     results = []
     global cnt
@@ -309,20 +332,45 @@ def parse_weapon_data(type, item_ids):
             results.append(
                 {
                     **get_basic_attributes(type, item_id),
+                    "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"],
                     "maxDurability": item_data["maxDurability"],
                     "iAmmoMax": item_data["iAmmoMax"],
                     "fReloadTime": item_data["fReloadTime"],
                     "rpm": item_data["rpm"],
-                    "weaponType": WEAPON_TYPE[item_data['weaponType']],
-                    "caliber": AMMO_TYPE[item_data['caliber']],
-                    # "weaponType": flavors[
-                    #     f"ItemDescriptions/WeaponType_{WEAPON_TYPE[item_data['weaponType']]}"
-                    # ],
-                    # "caliber": flavors[
-                    #     f"WorldResource/Resource_Ammo_{AMMO_TYPE[item_data['caliber']]}_short"
-                    # ],
+                    # "weaponType": WEAPON_TYPE[item_data["weaponType"]],
+                    # "caliber": AMMO_TYPE[item_data["caliber"]],
+                    "damage": get_damage(
+                        item_data["caliber"],
+                        item_data["weaponType"],
+                        format_value(item_data["damageMultiplier"]),
+                        item_data["iMaxAmmoPerShot"],
+                        3 if item_data["m_Name"] == "Weapon_Augusta" else None
+                    ),
+                    "baseDamage": DAMAGE_MULTIPLIERS["caliber"][item_data["caliber"]][0],
+                    "ammoPerShot": item_data["iMaxAmmoPerShot"],
+                    "weaponTypeMultiplier": DAMAGE_MULTIPLIERS["weaponType"][item_data["weaponType"]],
                     "damageMultiplier": format_value(item_data["damageMultiplier"]),
+                    "weaponType": flavors[
+                        f"ItemDescriptions/WeaponType_{WEAPON_TYPE[item_data['weaponType']]}"
+                    ],
+                    "caliber": flavors[
+                        f"WorldResource/Resource_Ammo_{AMMO_TYPE[item_data['caliber']]}_short"
+                    ],
+                    "spreadPerCaliber": {
+                        flavors[
+                        f"WorldResource/Resource_Ammo_{AMMO_TYPE[d['Caliber']]}_short"
+                    ]: d['Spread'] for d in item_data["spreadPerCaliber"]
+                    },
                     **get_modifiers_definition(item_data["baseAttributes"]),
+                    "displayFields": [
+                        "weaponType",
+                        "caliber",
+                        "damage",
+                        "rpm",
+                        "iAmmoMax",
+                        "Spread",
+                        "maxDurability",
+                    ],
                 }
             )
             # 58: spread, 18: kick
@@ -349,12 +397,11 @@ def get_basic_attributes(type, item_id):
     return {
         "id": item_id,
         "m_Name": item_data["m_Name"],
-        "displayName": item_data["displayName"],
+        "displayName": flavors[f"Items/{item_data['m_Name']}"],
         "type": type,
         "artwork": str(item_data["artwork"]["m_PathID"]),
         "basePrice": item_data["basePrice"],
-        "itemQuality": item_data["itemQuality"]
-        # "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"] # chamber, weapon
+        "itemQuality": item_data["itemQuality"],
     }
 
 
@@ -368,10 +415,12 @@ def parse_chamber_chisel(type, item_ids):
         results.append(
             {
                 **get_basic_attributes(type, item_id),
-                "modifiesCaliber": AMMO_TYPE[item_data["modifiesCaliber"]],
-                # "modifiesCaliber": flavors[
-                #     f"WorldResource/Resource_Ammo_{AMMO_TYPE[item_data['modifiesCaliber']]}_short"
-                # ],
+                "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"],
+                # "modifiesCaliber": AMMO_TYPE[item_data["modifiesCaliber"]],
+                "modifiesCaliber": flavors[
+                    f"WorldResource/Resource_Ammo_{AMMO_TYPE[item_data['modifiesCaliber']]}_short"
+                ],
+                "displayFields": [],
             }
         )
 
@@ -406,11 +455,16 @@ def parse_attachment_data(type, item_ids):
         item_data = data[item_id]
         cnt += 1
         logger.info(f"Parsing {cnt:>4} '%s'", item_data["m_Name"])
+
+        modifier_definitions = get_modifiers_definition(
+            item_data["modifiersOnAttachToItem"]
+        )
         results.append(
             {
                 **get_basic_attributes(type, item_id),
-                **get_modifiers_definition(item_data["modifiersOnAttachToItem"]),
-                #  "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"],
+                "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"],
+                **modifier_definitions,
+                "displayFields": list(modifier_definitions),
             }
         )
     return results
@@ -430,6 +484,21 @@ if __name__ == "__main__":
         logger.critical("'%s' not found! Please parse the game bundles first.")
         sys.exit()
     flavors = get_flavors(data)
+
+    display_field_mappings = {}
+    for k, v in flavors.items():
+        if k == "ProjectilieFlameThrower_itemDescription":
+            display_field_mappings["ProjectileFlameThrower"] = v
+            continue
+
+        if k.startswith("ItemAttributes/") and k.endswith("_itemDescription"):
+            display_field_mappings[
+                k.replace("ItemAttributes/", "").replace("_itemDescription", "")
+            ] = v
+
+    with open("displayFields.json", "w", encoding="utf8") as f:
+        json.dump(display_field_mappings, f, ensure_ascii=False, indent=4)
+
     final_results = []
     parse_item_data(category, final_results)
     parse_recipe_data(data)
