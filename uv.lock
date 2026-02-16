@@ -517,7 +517,7 @@ wheels = [
 ]
 
 [[package]]
-name = "sulfur-oil-table"
+name = "sulfur-toolkit"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

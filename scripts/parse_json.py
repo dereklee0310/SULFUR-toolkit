@@ -5,6 +5,7 @@ Parse ./tmp/data.json to generate json and spreadsheet.
 import json
 import sys
 from collections import defaultdict
+from pathlib import Path
 
 import openpyxl
 import pandas as pd
@@ -20,7 +21,6 @@ OIL_JSON_PATH = "./oils.json"
 RECIPE_JSON_PATH = "./recipes.json"
 RECIPE_XLSX_PATH = "./recipes.xlsx"
 FINAL_RESULT_PATH = "./results.json"
-FLAVOR_PATH = "./flavors.json"
 
 RECIPE_DATABASE_ID = "3425407372818098406"
 I2_LANGUAGES_ID = "-4669794531358937986"
@@ -155,15 +155,6 @@ def get_modifiers_definition(modifiers):
         name = data[id_mapping["attributeModifier"][str(modifier["attribute"])]][
             "m_Name"
         ]
-        # try:
-        #     name = flavors[
-        #         f"ItemAttributes/{data[id_mapping['attributeModifier'][str(modifier['attribute'])]]['m_Name']}_label"
-        #     ]
-        # except KeyError:
-        #     logger.warning("Cannot find label")
-        #     name = flavors["ItemAttributes/ProjectilieFlameThrower_label"][
-        #         0
-        #     ]  # Hard code this typo dog shit
         # 100: boolean/add, 200: multiplier, 300: bullet size
         # try:
         #     mod_type = modifier["modType"]
@@ -179,13 +170,7 @@ def get_modifiers_definition(modifiers):
 
 
 def get_oil_types(info):
-    oil_types = []
-    # Only reverse "Costs Durability"
-    oil_types = [
-        key
-        for key in EFFECT_TYPES
-        if (info.get(key, 0) != 0) ^ (key == "Costs Durability")
-    ]
+    oil_types = list(info.keys())
     return oil_types if oil_types else ["MISC"]
 
 
@@ -217,8 +202,8 @@ def parse_enchantment_data(type, item_ids):
     item_infos = [build_enchantment_object(type, item_id) for item_id in item_ids]
     oil_groups = defaultdict(list)
     for oil_info in item_infos:
-        for type in get_oil_types(oil_info):
-            oil_groups[type].append(oil_info)
+        for oil_type in get_oil_types(oil_info):
+            oil_groups[oil_type].append(oil_info)
 
     if type == "oil":
         with open(OIL_JSON_PATH, "w", encoding="utf8") as f:
@@ -311,7 +296,9 @@ def parse_recipe_data(data):
     return recipe_infos
 
 
-def get_damage(caliber, weapon_type, damage_multiplier, ammo_multiplier, ammo_overwrite=None):
+def get_damage(
+    caliber, weapon_type, damage_multiplier, ammo_multiplier, ammo_overwrite=None
+):
     damage, ammo_per_shot = DAMAGE_MULTIPLIERS["caliber"][caliber]
     ammo_per_shot = ammo_overwrite if ammo_overwrite else ammo_per_shot
     return (
@@ -332,34 +319,29 @@ def parse_weapon_data(type, item_ids):
             results.append(
                 {
                     **get_basic_attributes(type, item_id),
-                    "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"],
                     "maxDurability": item_data["maxDurability"],
                     "iAmmoMax": item_data["iAmmoMax"],
                     "fReloadTime": item_data["fReloadTime"],
                     "rpm": item_data["rpm"],
-                    # "weaponType": WEAPON_TYPE[item_data["weaponType"]],
-                    # "caliber": AMMO_TYPE[item_data["caliber"]],
                     "damage": get_damage(
                         item_data["caliber"],
                         item_data["weaponType"],
                         format_value(item_data["damageMultiplier"]),
                         item_data["iMaxAmmoPerShot"],
-                        3 if item_data["m_Name"] == "Weapon_Augusta" else None
+                        3 if item_data["m_Name"] == "Weapon_Augusta" else None,
                     ),
-                    "baseDamage": DAMAGE_MULTIPLIERS["caliber"][item_data["caliber"]][0],
+                    "baseDamage": DAMAGE_MULTIPLIERS["caliber"][item_data["caliber"]][
+                        0
+                    ],
                     "ammoPerShot": item_data["iMaxAmmoPerShot"],
-                    "weaponTypeMultiplier": DAMAGE_MULTIPLIERS["weaponType"][item_data["weaponType"]],
+                    "weaponTypeMultiplier": DAMAGE_MULTIPLIERS["weaponType"][
+                        item_data["weaponType"]
+                    ],
                     "damageMultiplier": format_value(item_data["damageMultiplier"]),
-                    "weaponType": flavors[
-                        f"ItemDescriptions/WeaponType_{WEAPON_TYPE[item_data['weaponType']]}"
-                    ],
-                    "caliber": flavors[
-                        f"WorldResource/Resource_Ammo_{AMMO_TYPE[item_data['caliber']]}_short"
-                    ],
+                    "weaponType": WEAPON_TYPE[item_data["weaponType"]],
+                    "caliber": AMMO_TYPE[item_data["caliber"]],
                     "spreadPerCaliber": {
-                        flavors[
-                        f"WorldResource/Resource_Ammo_{AMMO_TYPE[d['Caliber']]}_short"
-                    ]: d['Spread'] for d in item_data["spreadPerCaliber"]
+                        d["Caliber"]: d["Spread"] for d in item_data["spreadPerCaliber"]
                     },
                     **get_modifiers_definition(item_data["baseAttributes"]),
                     "displayFields": [
@@ -373,23 +355,13 @@ def parse_weapon_data(type, item_ids):
                     ],
                 }
             )
-            # 58: spread, 18: kick
-            #         "baseAttributes": [
-            # {
-            #     "attribute": 58,
-            #     "value": 2.0
-            # },
-            # {
-            #     "attribute": 18,
-            #     "value": 0.0
-            # }
 
     return results
 
 
-def get_flavors(data):
-    flavors = data[I2_LANGUAGES_ID]["mSource"]["mTerms"]  # I2Languages
-    return {flavor["Term"]: flavor["Languages"][0] for flavor in flavors}
+def get_i2languages(data):
+    i2languages = data[I2_LANGUAGES_ID]["mSource"]["mTerms"]
+    return {flavor["Term"]: flavor["Languages"] for flavor in i2languages}
 
 
 def get_basic_attributes(type, item_id):
@@ -397,7 +369,6 @@ def get_basic_attributes(type, item_id):
     return {
         "id": item_id,
         "m_Name": item_data["m_Name"],
-        "displayName": flavors[f"Items/{item_data['m_Name']}"],
         "type": type,
         "artwork": str(item_data["artwork"]["m_PathID"]),
         "basePrice": item_data["basePrice"],
@@ -415,11 +386,8 @@ def parse_chamber_chisel(type, item_ids):
         results.append(
             {
                 **get_basic_attributes(type, item_id),
-                "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"],
                 # "modifiesCaliber": AMMO_TYPE[item_data["modifiesCaliber"]],
-                "modifiesCaliber": flavors[
-                    f"WorldResource/Resource_Ammo_{AMMO_TYPE[item_data['modifiesCaliber']]}_short"
-                ],
+                "modifiesCaliber": AMMO_TYPE[item_data["modifiesCaliber"]],
                 "displayFields": [],
             }
         )
@@ -443,7 +411,7 @@ def parse_item_data(category, results):
     for k, v in category.items():
         if isinstance(v, dict):
             parse_item_data(v, results)
-        else:  # k is a list
+        else:  # v is list of ids
             # "useType" cannot tell oil and scroll apart, use self-defined useType instead
             results.extend(parse_functions[k](k, v))
 
@@ -462,12 +430,42 @@ def parse_attachment_data(type, item_ids):
         results.append(
             {
                 **get_basic_attributes(type, item_id),
-                "flavor": flavors[f"Items/{item_data['m_Name']}_flavor"],
                 **modifier_definitions,
                 "displayFields": list(modifier_definitions),
             }
         )
     return results
+
+
+def parse_i18n():
+    data[I2_LANGUAGES_ID]["mSource"]["mLanguages"].pop() # ar is not implemented yet
+    i18n = {x["Code"]: {} for x in data[I2_LANGUAGES_ID]["mSource"]["mLanguages"]}
+    languages = i18n.keys()
+    print("Languages:", {x["Code"]: x["Name"] for x in data[I2_LANGUAGES_ID]["mSource"]["mLanguages"]})
+    for k, v in i2languages.items():
+        if (
+            k.startswith("ItemDescriptions/")
+            or (k.startswith("WorldResource/"))
+            or k.startswith("Items/")
+        ):
+            for language, text in zip(languages, v):
+                i18n[language][k] = text
+
+        if k.startswith("ItemAttributes/") and k.endswith("_itemDescription"):
+            # Try itemDescription first, use label value as backup
+            if not v:
+                v = i2languages[k.replace("_itemDescription", "_label")]
+            for language, text in zip(languages, v):
+                i18n[language][k] = text
+
+        # Patch this dog shit
+        if k == "ProjectilieFlameThrower_itemDescription":
+            i18n[language]["ProjectileFlameThrower_itemDescription"] = v
+
+    Path("locales").mkdir(parents=True, exist_ok=True)
+    for language, content in i18n.items():
+        with open(Path(f"locales/{language}.json"), "w", encoding="utf8") as f:
+            json.dump(content, f, ensure_ascii=False, indent=4)
 
 
 if __name__ == "__main__":
@@ -483,34 +481,14 @@ if __name__ == "__main__":
     except FileNotFoundError:
         logger.critical("'%s' not found! Please parse the game bundles first.")
         sys.exit()
-    flavors = get_flavors(data)
+    i2languages = get_i2languages(data)
 
-    display_field_mappings = {}
-    for k, v in flavors.items():
-        if k == "ProjectilieFlameThrower_itemDescription":
-            display_field_mappings["ProjectileFlameThrower"] = v
-            continue
-
-        if k.startswith("ItemAttributes/") and k.endswith("_itemDescription"):
-            display_field_mappings[
-                k.replace("ItemAttributes/", "").replace("_itemDescription", "")
-            ] = v
-
-    with open("displayFields.json", "w", encoding="utf8") as f:
-        json.dump(display_field_mappings, f, ensure_ascii=False, indent=4)
+    parse_i18n()
+    # exit()
 
     final_results = []
     parse_item_data(category, final_results)
     parse_recipe_data(data)
 
-    for result in final_results:
-        # displayName is not fucking reliable
-        try:
-            result["displayName"] = flavors[f"Items/{data[result['id']]['m_Name']}"]
-        except KeyError:
-            print(result["displayName"])
     with open(FINAL_RESULT_PATH, "w", encoding="utf8") as f:
         json.dump(final_results, f, ensure_ascii=False, indent=4)
-
-    with open(FLAVOR_PATH, "w", encoding="utf8") as f:
-        json.dump(flavors, f, ensure_ascii=False, indent=4)

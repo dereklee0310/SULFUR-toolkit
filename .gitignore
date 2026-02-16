@@ -5,3 +5,4 @@ tmp
 /*.json
 __pycache__/
 AssetRipper_win_x64/
+locales/
