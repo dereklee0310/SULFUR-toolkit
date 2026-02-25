@@ -237,37 +237,40 @@ def build_recipe_object(src_data, id_mapping, recipe_data):
     logger.info(f"Parsing {cnt:>4} '%s'", recipe_data["name"])
     result = {
         "recipeName": recipe_data["name"],
-        "name": src_data[id_mapping[recipe_data["createsItem"]["value"]]][
-            "displayName"
-        ],
+        "name": src_data[id_mapping[recipe_data["createsItem"]["value"]]]["m_Name"],
         "quantity": recipe_data["quantityCreated"],
-        "itemsNeeded": {},
-    }
-
-    if args.dev:
-        result["artwork"] = str(
+        "artwork": str(
             src_data[id_mapping[recipe_data["createsItem"]["value"]]]["artwork"][
                 "m_PathID"
             ]
-        )
+        ),
+        "itemsNeeded": [],
+        "newPrice": src_data[id_mapping[recipe_data["createsItem"]["value"]]]["basePrice"]
+        * recipe_data["quantityCreated"],
+    }
 
+    old_price = 0
     for item_data in recipe_data["itemsNeeded"]:
         real_item_data = src_data[id_mapping[item_data["item"]["value"]]]
-        item_name = real_item_data["displayName"]
+        item_name = real_item_data["m_Name"]
 
-        if args.dev:
-            try:
-                result["itemsNeeded"][item_name] = {
+        try:
+            result["itemsNeeded"].append(
+                {
+                    "name": item_name,
                     "quantity": item_data["quantity"],
                     "artwork": str(real_item_data["artwork"]["m_PathID"]),
                 }
-                continue
-            except KeyError:
-                # Some items like cactus is not available now
-                logger.warning(
-                    "Artwork id not found: '%s'", real_item_data["artwork"]["m_PathID"]
-                )
-            result["itemsNeeded"][item_name] = item_data["quantity"]
+            )
+            old_price += real_item_data["basePrice"] * item_data["quantity"]
+            continue
+        except KeyError:
+            # Some items like cactus is not available now
+            logger.warning(
+                "Artwork id not found: '%s'", real_item_data["artwork"]["m_PathID"]
+            )
+
+    result["oldPrice"] = old_price
     return result
 
 
@@ -288,9 +291,10 @@ def parse_recipe_data(data):
         )
 
     with open(RECIPE_JSON_PATH, "w", encoding="utf8") as f:
-        json.dump(
-            {"all": recipe_infos} | recipes_of_items, f, ensure_ascii=False, indent=4
-        )
+        # json.dump(
+        #     {"all": recipe_infos} | recipes_of_items, f, ensure_ascii=False, indent=4
+        # )
+        json.dump(recipe_infos, f, ensure_ascii=False, indent=4)
 
     dump_recipe_xlsx(recipe_infos, recipes_of_items)
     return recipe_infos
@@ -301,10 +305,14 @@ def get_damage(
 ):
     damage, ammo_per_shot = DAMAGE_MULTIPLIERS["caliber"][caliber]
     ammo_per_shot = ammo_overwrite if ammo_overwrite else ammo_per_shot
-    return (
-        damage * DAMAGE_MULTIPLIERS["weaponType"][weapon_type] * damage_multiplier,
-        ammo_per_shot * ammo_multiplier,
-    )
+    #
+    result = f"{int(damage * DAMAGE_MULTIPLIERS['weaponType'][weapon_type] * damage_multiplier)}"
+
+    if ammo_per_shot > 1:
+        result += f"x{ammo_per_shot}"
+    if ammo_multiplier > 1:
+        result += f"x{ammo_multiplier}"
+    return result
 
 
 def parse_weapon_data(type, item_ids):
@@ -319,39 +327,36 @@ def parse_weapon_data(type, item_ids):
             results.append(
                 {
                     **get_basic_attributes(type, item_id),
-                    "maxDurability": item_data["maxDurability"],
-                    "iAmmoMax": item_data["iAmmoMax"],
-                    "fReloadTime": item_data["fReloadTime"],
-                    "rpm": item_data["rpm"],
-                    "damage": get_damage(
+                    "Durability": item_data["maxDurability"],
+                    "MagSize": item_data["iAmmoMax"],
+                    "ReloadSpeed": item_data["fReloadTime"],
+                    "RPM": item_data["rpm"],
+                    "Damage": get_damage(
                         item_data["caliber"],
                         item_data["weaponType"],
                         format_value(item_data["damageMultiplier"]),
                         item_data["iMaxAmmoPerShot"],
                         3 if item_data["m_Name"] == "Weapon_Augusta" else None,
                     ),
-                    "baseDamage": DAMAGE_MULTIPLIERS["caliber"][item_data["caliber"]][
-                        0
-                    ],
                     "ammoPerShot": item_data["iMaxAmmoPerShot"],
                     "weaponTypeMultiplier": DAMAGE_MULTIPLIERS["weaponType"][
                         item_data["weaponType"]
                     ],
                     "damageMultiplier": format_value(item_data["damageMultiplier"]),
-                    "weaponType": WEAPON_TYPE[item_data["weaponType"]],
-                    "caliber": AMMO_TYPE[item_data["caliber"]],
+                    "Type": WEAPON_TYPE[item_data["weaponType"]],
+                    "AmmoType": AMMO_TYPE[item_data["caliber"]],
                     "spreadPerCaliber": {
                         d["Caliber"]: d["Spread"] for d in item_data["spreadPerCaliber"]
                     },
                     **get_modifiers_definition(item_data["baseAttributes"]),
                     "displayFields": [
-                        "weaponType",
-                        "caliber",
-                        "damage",
-                        "rpm",
-                        "iAmmoMax",
+                        "Type",
+                        "AmmoType",
+                        "Damage",
+                        "RPM",
+                        "MagSize",
                         "Spread",
-                        "maxDurability",
+                        "Durability",
                     ],
                 }
             )
@@ -438,10 +443,13 @@ def parse_attachment_data(type, item_ids):
 
 
 def parse_i18n():
-    data[I2_LANGUAGES_ID]["mSource"]["mLanguages"].pop() # ar is not implemented yet
+    data[I2_LANGUAGES_ID]["mSource"]["mLanguages"].pop()  # ar is not implemented yet
     i18n = {x["Code"]: {} for x in data[I2_LANGUAGES_ID]["mSource"]["mLanguages"]}
     languages = i18n.keys()
-    print("Languages:", {x["Code"]: x["Name"] for x in data[I2_LANGUAGES_ID]["mSource"]["mLanguages"]})
+    print(
+        "Languages:",
+        {x["Code"]: x["Name"] for x in data[I2_LANGUAGES_ID]["mSource"]["mLanguages"]},
+    )
     for k, v in i2languages.items():
         if (
             k.startswith("ItemDescriptions/")
@@ -455,12 +463,19 @@ def parse_i18n():
             # Try itemDescription first, use label value as backup
             if not v:
                 v = i2languages[k.replace("_itemDescription", "_label")]
+
+            if k == "ItemAttributes/ProjectilieFlameThrower_itemDescription":
+                k = "ItemAttributes/ProjectileFlameThrower_itemDescription"
+            elif k == "ItemAttributes/ProjectileOnHitChainLighting_itemDescription":
+                k = "ItemAttributes/ProjectileOnHitChainLightning_itemDescription"
+            elif (
+                k == "ItemAttributes/EnchantmentIncreaseHeadshotDamage_itemDescription"
+            ):
+                k = "ItemAttributes/EnchantmentIncreasedHeadshotDamage_itemDescription"
+
+            # Patch this dog shit
             for language, text in zip(languages, v):
                 i18n[language][k] = text
-
-        # Patch this dog shit
-        if k == "ProjectilieFlameThrower_itemDescription":
-            i18n[language]["ProjectileFlameThrower_itemDescription"] = v
 
     Path("locales").mkdir(parents=True, exist_ok=True)
     for language, content in i18n.items():
@@ -484,7 +499,6 @@ if __name__ == "__main__":
     i2languages = get_i2languages(data)
 
     parse_i18n()
-    # exit()
 
     final_results = []
     parse_item_data(category, final_results)

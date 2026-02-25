@@ -27,7 +27,7 @@ BLACKLIST = set(
         "Enchantment_Satiety",
         "Enchantment_Flutter",
         "Enchantment_Duality",
-        "Enchantment_ForceOil"
+        "Enchantment_ForceOil",
         "Enchantment_Trinity",
         "Enchantment_Slayer",
         "Enchantment_FastForwardOil",
