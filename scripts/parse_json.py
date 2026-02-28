@@ -124,9 +124,7 @@ def build_enchantment_object(type, item_id):
     )
     results |= item_definition
 
-    if args.dev:
-        results["artwork"] = str(item_data["artwork"]["m_PathID"])
-        # results["definition"] = item_definition  # For structural parsing
+    results["artwork"] = str(item_data["artwork"]["m_PathID"])
 
     return results
 
@@ -346,7 +344,7 @@ def parse_weapon_data(type, item_ids):
                     "Type": WEAPON_TYPE[item_data["weaponType"]],
                     "AmmoType": AMMO_TYPE[item_data["caliber"]],
                     "spreadPerCaliber": {
-                        d["Caliber"]: d["Spread"] for d in item_data["spreadPerCaliber"]
+                        AMMO_TYPE[d["Caliber"]]: d["Spread"] for d in item_data["spreadPerCaliber"]
                     },
                     **get_modifiers_definition(item_data["baseAttributes"]),
                     "displayFields": [

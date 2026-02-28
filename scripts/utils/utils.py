@@ -81,12 +81,6 @@ def parse_json_args() -> argparse.Namespace:
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
         help="Set the logging level, (default: %(default)s)",
     )
-    parser.add_argument(
-        "-d",
-        "--dev",
-        action="store_true",
-        help="Activate developer mode to output artwork id",
-    )
     return parser.parse_args()
 
 
