@@ -19,9 +19,8 @@ BLACKLIST = set(
     [
         "Weapon_WyattPulsarNotUse",
         "Weapon_Arbiter2NotUse",
-        "Weapon_Chat-Pardeur98",
-        "Weapon_Warpig",
         "Weapon_RamshackOld_NOT_USED",
+        "Weapon_SocomACR",
         "Enchantment_TestOil",
         "Enchantment_TestOil2",
         "Enchantment_Satiety",
