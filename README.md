@@ -35,23 +35,23 @@ And the project directory should look like this:
 ├── onstartup_assets_all_*.bundle
 ├── pyproject.toml
 ├── requirements.txt
-├── scripts
+├── tools
 └── uv.lock
 ```
 
 1. Extract data from the bundle and save it into `./tmp/data.json`.
 ```
-uv run scripts/parse_bundle.py
+uv run tools/parse_bundle.py
 ```
 2. Parse `./tmp/data.json` to generate `.json` and `.xlsx` output files, see [examples](examples/).
 ```
-uv run scripts/parse_json.py
+uv run tools/parse_json.py
 ```
 
 ### Assets
 Run the script below to unpack Sprite and Texture2D assets into `assets/`
 ```
-uv run scripts/unpack_asset.py
+uv run tools/unpack_asset.py
 ```
 
 ## Acknowledgments
