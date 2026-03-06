@@ -1,8 +1,8 @@
 *.bundle
 assets
+locales
 tmp
-/*.xlsx
-/*.json
-__pycache__/
-AssetRipper_win_x64/
-locales/
+
+__pycache__
+AssetRipper_win_x64
+tools/update.bat
