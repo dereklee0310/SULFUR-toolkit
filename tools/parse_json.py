@@ -99,6 +99,27 @@ DAMAGE_MULTIPLIERS = {
     "weaponType": {1: 1.2, 3: 1.0, 5: 1.0, 6: 1.6, 7: 2.0, 8: 1.0, 9: 1.0, 10: 2.0},
 }
 
+PERCENT_TYPES = set(
+    [
+        "ProjectileTimeScale",
+        "ProjectileAmount",
+        "ProjectileScale",
+        # "Damage",
+        "RPM",
+        "CritChance",
+        "ConsumeExtraAmmoChance",
+        "ConsumeAmmoChance",
+        "ItemStat_LootChanceMultiplier",
+        "KickMultiplier",
+        "ItemStat_MoveSpeed",
+        "MaxDurability",
+        "ReloadSpeed",
+        "ItemStat_JumpPower",
+        "AimMovingBonus",
+        "CritChanceADS",
+    ]
+)
+
 EFFECT_TYPES = list(COLUMN_MAPPING.values())[4:]
 
 args = parse_json_args()
@@ -160,10 +181,14 @@ def get_modifiers_definition(modifiers):
         #     logger.warning("modType not found!")
         #     mod_type = 0
         value = format_value(modifier["value"])
-        # if name == "Damage" and mod_type == 200:
-        #     results["Damage%"] = value
-        # else:
-        results[name] = value
+        multiply = modifier.get("modType", 0) == 200 or name in PERCENT_TYPES
+        results[name] = {
+            # Fix the dog shit elephant oil bullet size
+            "value": value / 100 if multiply and value > 100 else value,
+            # Attributes like CritChance have modType 100, need to patch it.
+            # Fix your fucking code perfect random.
+            "isMultiplier": multiply,
+        }
     return results
 
 
@@ -188,7 +213,9 @@ def adjust_width(filename):
 def dump_oil_xlsx(oil_infos, oil_groups):
     with pd.ExcelWriter(OIL_XLSX_PATH, engine="openpyxl") as writer:
         df = pd.DataFrame(oil_infos)
+        df.drop(["id", "type", "displayFields", "artwork"], axis=1, inplace=True)
         df = df.rename(columns=COLUMN_MAPPING)
+        df = df.map(lambda x: x["value"] if isinstance(x, dict) and "value" in x else x)
         df.to_excel(writer, sheet_name="Comparison Chart", index=False)
         for group_name, oil_group_infos in oil_groups.items():
             df = pd.DataFrame(oil_group_infos)
@@ -213,6 +240,7 @@ def parse_enchantment_data(type, item_ids):
 def dump_recipe_xlsx(recipe_infos, recipes_of_items):
     with pd.ExcelWriter(RECIPE_XLSX_PATH, engine="openpyxl") as writer:
         df = pd.DataFrame(recipe_infos)
+        df.drop("artwork", axis=1, inplace=True)
         df.to_excel(writer, sheet_name="Recipes", index=False)
         df = pd.DataFrame.from_dict(recipes_of_items, orient="index")
         df.to_excel(writer, sheet_name="Recipes of Items")
@@ -243,7 +271,9 @@ def build_recipe_object(src_data, id_mapping, recipe_data):
             ]
         ),
         "itemsNeeded": [],
-        "newPrice": src_data[id_mapping[recipe_data["createsItem"]["value"]]]["basePrice"]
+        "newPrice": src_data[id_mapping[recipe_data["createsItem"]["value"]]][
+            "basePrice"
+        ]
         * recipe_data["quantityCreated"],
     }
 
@@ -322,43 +352,49 @@ def parse_weapon_data(type, item_ids):
         # Might include throwables
         if "slotType" in item_data and item_data["slotType"] == 7:
             logger.info(f"Parsing {cnt:>4} '%s'", item_data["m_Name"])
-            results.append(
-                {
-                    **get_basic_attributes(type, item_id),
-                    "Durability": item_data["maxDurability"],
-                    "MagSize": item_data["iAmmoMax"],
-                    "ReloadSpeed": item_data["fReloadTime"],
-                    "RPM": item_data["rpm"],
-                    "Damage": get_damage(
-                        item_data["caliber"],
-                        item_data["weaponType"],
-                        format_value(item_data["damageMultiplier"]),
-                        item_data["iMaxAmmoPerShot"],
-                        3 if item_data["m_Name"] == "Weapon_Augusta" else None,
-                    ),
-                    "ammoPerShot": item_data["iMaxAmmoPerShot"],
-                    "weaponTypeMultiplier": DAMAGE_MULTIPLIERS["weaponType"][
-                        item_data["weaponType"]
-                    ],
-                    "damageMultiplier": format_value(item_data["damageMultiplier"]),
-                    "Type": WEAPON_TYPE[item_data["weaponType"]],
-                    "AmmoType": AMMO_TYPE[item_data["caliber"]],
-                    "spreadPerCaliber": {
-                        AMMO_TYPE[d["Caliber"]]: d["Spread"] for d in item_data["spreadPerCaliber"]
-                    },
-                    **get_modifiers_definition(item_data["baseAttributes"]),
-                    "displayFields": [
-                        "Type",
-                        "AmmoType",
-                        "Damage",
-                        "RPM",
-                        "MagSize",
-                        "Spread",
-                        "Durability",
-                    ],
-                }
-            )
-
+            weapon_data = {
+                **get_basic_attributes(type, item_id),
+                "Durability": item_data["maxDurability"],
+                "MagSize": item_data["iAmmoMax"],
+                "ReloadSpeed": item_data["fReloadTime"],
+                "RPM": item_data["rpm"],
+                "Damage": get_damage(
+                    item_data["caliber"],
+                    item_data["weaponType"],
+                    format_value(item_data["damageMultiplier"]),
+                    item_data["iMaxAmmoPerShot"],
+                    3 if item_data["m_Name"] == "Weapon_Augusta" else None,
+                ),
+                "ammoPerShot": item_data["iMaxAmmoPerShot"],
+                "weaponTypeMultiplier": DAMAGE_MULTIPLIERS["weaponType"][
+                    item_data["weaponType"]
+                ],
+                "damageMultiplier": format_value(item_data["damageMultiplier"]),
+                "Type": WEAPON_TYPE[item_data["weaponType"]],
+                "AmmoType": AMMO_TYPE[item_data["caliber"]],
+                "spreadPerCaliber": {
+                    AMMO_TYPE[d["Caliber"]]: d["Spread"]
+                    for d in item_data["spreadPerCaliber"]
+                },
+                **get_modifiers_definition(item_data["baseAttributes"]),
+                "displayFields": [
+                    "Type",
+                    "AmmoType",
+                    "Damage",
+                    "RPM",
+                    "MagSize",
+                    "Spread",
+                    "Durability",
+                ],
+            }
+            # Flicker have spread 0, what an actual fuck
+            try:
+                weapon_data["Spread"] = weapon_data["spreadPerCaliber"][
+                    weapon_data["AmmoType"]
+                ]
+            except KeyError:  # EnergyCell has no spread modifier
+                pass
+            results.append(weapon_data)
     return results
 
 

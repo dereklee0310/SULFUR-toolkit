@@ -40,6 +40,7 @@ BLACKLIST = set(
     ]
 )
 
+
 args = parse_bundle_args()
 logger = setup_logger(args.logging_level)
 
@@ -61,18 +62,6 @@ def parse_bundle():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     data = {}
-    category = {
-        "weapon": [],
-        "enchantment": {"oil": [], "scroll": []},
-        "attachment": {
-            "muzzle": [],
-            "scope": [],
-            "laserSight": [],
-            "chamber": [],
-            "insurance": [],
-        },
-        "chamberChisel": [],
-    }
     mapping = {"item": {}, "enchantmentDefinition": {}, "attributeModifier": {}}
 
     env = UnityPy.load(get_bundle())
@@ -103,39 +92,14 @@ def parse_bundle():
         cnt += 1
         if item_name.startswith("Enchantment_"):
             logger.info(f"Found    enchantment {cnt:>3}: '%s'", item_name)
-            if item_name.endswith("Oil") or item_name == "Enchantment_FeatureGun":
-                category["enchantment"]["oil"].append(item_id)
-            else:
-                category["enchantment"]["scroll"].append(item_id)
         elif item_name.startswith("Attachment_"):
             logger.info(f"Found     attachment {cnt:>3}: '%s'", item_name)
-
-            if not tree["modifiersOnAttachToItem"]:
-                category["attachment"]["insurance"].append(item_id)
-                continue
-
-            attachment_type = tree["modifiersOnAttachToItem"][0]["attribute"]
-            if attachment_type in (57, 58):  # 57: silence, 58: spead
-                category["attachment"]["muzzle"].append(item_id)
-            elif attachment_type == 5:  # crit chance
-                category["attachment"]["scope"].append(item_id)
-            elif attachment_type == 1:  # accuracy while moving
-                category["attachment"]["laserSight"].append(item_id)
-            elif attachment_type == 14:  # firing mode
-                # 1 for gun crank, -1 for priming bolt
-                # Priming bolt also have spread and damage, ignore it for now
-                category["attachment"]["chamber"].append(item_id)
         elif WEAPON_NAME_REGEX.match(item_name):
             logger.info(f"Found         weapon {cnt:>3}: '%s'", item_name)
-            category["weapon"].append(item_id)
         elif item_name.startswith("Consumable_ChamberChisel"):
             logger.info(f"Found chamber chisel {cnt:>3}: '%s'", item_name)
-            category["chamberChisel"].append(item_id)
         else:
             cnt -= 1
-
-    with open(OUTPUT_DIR / "category.json", "w", encoding="utf8") as f:
-        json.dump(category, f, ensure_ascii=False, indent=4)
 
     with open(OUTPUT_DIR / "data.json", "w", encoding="utf8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
