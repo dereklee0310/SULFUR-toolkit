@@ -346,7 +346,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -461,9 +461,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -622,7 +622,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -1283,9 +1283,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -2278,7 +2278,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -2323,7 +2323,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -2415,9 +2415,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -2699,7 +2699,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -2883,9 +2883,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -2973,12 +2973,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -3391,7 +3396,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -3685,7 +3690,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -4231,7 +4236,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -4254,7 +4259,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -4703,9 +4708,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -4772,7 +4777,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -5869,7 +5874,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -5984,9 +5989,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -6145,7 +6150,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -6806,9 +6811,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -7801,7 +7806,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -7846,7 +7851,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -7938,9 +7943,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -8222,7 +8227,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -8406,9 +8411,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -8496,12 +8501,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -8914,7 +8924,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -9208,7 +9218,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -9754,7 +9764,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -9777,7 +9787,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -10226,9 +10236,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -10295,7 +10305,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -11392,7 +11402,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -11507,9 +11517,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -11668,7 +11678,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -12329,9 +12339,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -13324,7 +13334,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -13369,7 +13379,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -13461,9 +13471,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -13745,7 +13755,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -13929,9 +13939,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -14019,12 +14029,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -14437,7 +14452,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -14731,7 +14746,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -15277,7 +15292,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -15300,7 +15315,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -15749,9 +15764,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -15818,7 +15833,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -16915,7 +16930,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -17030,9 +17045,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -17191,7 +17206,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -17852,9 +17867,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -18847,7 +18862,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -18892,7 +18907,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -18984,9 +18999,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -19268,7 +19283,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -19452,9 +19467,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -19542,12 +19557,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -19960,7 +19980,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -20254,7 +20274,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -20800,7 +20820,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -20823,7 +20843,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -21272,9 +21292,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -21341,7 +21361,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -22438,7 +22458,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -22553,9 +22573,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -22714,7 +22734,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -23375,9 +23395,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -24370,7 +24390,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -24415,7 +24435,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -24507,9 +24527,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -24791,7 +24811,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -24975,9 +24995,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -25065,12 +25085,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -25483,7 +25508,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -25777,7 +25802,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -26323,7 +26348,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -26346,7 +26371,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -26795,9 +26820,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -26864,7 +26889,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -27961,7 +27986,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -28076,9 +28101,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -28237,7 +28262,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -28898,9 +28923,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -29893,7 +29918,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -29938,7 +29963,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -30030,9 +30055,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -30314,7 +30339,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -30498,9 +30523,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -30588,12 +30613,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -31006,7 +31036,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -31300,7 +31330,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -31846,7 +31876,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -31869,7 +31899,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -32318,9 +32348,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -32387,7 +32417,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -33484,7 +33514,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -33599,9 +33629,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -33760,7 +33790,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -34421,9 +34451,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -35416,7 +35446,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -35461,7 +35491,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -35553,9 +35583,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -35837,7 +35867,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -36021,9 +36051,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -36111,12 +36141,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -36529,7 +36564,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -36823,7 +36858,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -37369,7 +37404,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -37392,7 +37427,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -37841,9 +37876,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -37910,7 +37945,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -39007,7 +39042,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -39122,9 +39157,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -39283,7 +39318,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -39944,9 +39979,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -40939,7 +40974,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -40984,7 +41019,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -41076,9 +41111,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -41360,7 +41395,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -41544,9 +41579,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -41634,12 +41669,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -42052,7 +42092,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -42346,7 +42386,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -42892,7 +42932,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -42915,7 +42955,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -43364,9 +43404,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -43433,7 +43473,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -44530,7 +44570,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -44645,9 +44685,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -44806,7 +44846,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -45467,9 +45507,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -46462,7 +46502,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -46507,7 +46547,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -46599,9 +46639,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -46883,7 +46923,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -47067,9 +47107,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -47157,12 +47197,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -47575,7 +47620,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -47869,7 +47914,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -48415,7 +48460,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -48438,7 +48483,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -48887,9 +48932,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -48956,7 +49001,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -50053,7 +50098,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -50168,9 +50213,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -50329,7 +50374,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -50990,9 +51035,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -51985,7 +52030,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -52030,7 +52075,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -52122,9 +52167,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -52406,7 +52451,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -52590,9 +52635,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -52680,12 +52725,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -53098,7 +53148,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -53392,7 +53442,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -53938,7 +53988,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -53961,7 +54011,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -54410,9 +54460,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -54479,7 +54529,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -55520,7 +55570,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -56193,12 +56243,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -57257,7 +57312,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -57279,7 +57334,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -57420,12 +57475,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -58568,7 +58628,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -59071,12 +59131,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -60010,7 +60075,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -60125,9 +60190,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -60286,7 +60351,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -60947,9 +61012,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -61942,7 +62007,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -61987,7 +62052,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -62079,9 +62144,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -62363,7 +62428,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -62547,9 +62612,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -62637,12 +62702,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -63055,7 +63125,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -63349,7 +63419,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -63895,7 +63965,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -63918,7 +63988,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -64367,9 +64437,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -64436,7 +64506,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -65380,7 +65450,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -65988,12 +66058,17 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         },
         {
@@ -66538,7 +66613,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -67120,7 +67195,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -67283,9 +67358,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -68919,7 +68994,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -69128,7 +69203,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -70097,9 +70172,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -70275,7 +70350,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -70298,9 +70373,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 2.0,
                 "isMultiplier": true
             },
             "ConsumeExtraAmmoChance": {
@@ -70321,7 +70396,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -70392,9 +70467,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -70472,7 +70547,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -70494,7 +70569,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -70517,9 +70592,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 1.0,
+                "value": 0.5,
                 "isMultiplier": true
             },
             "displayFields": [
@@ -70586,7 +70661,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -70609,9 +70684,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 1.5,
                 "isMultiplier": true
             },
             "DisableADS": {
@@ -70632,7 +70707,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -70678,7 +70753,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 3.0,
                 "isMultiplier": true
@@ -70701,7 +70776,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -70724,7 +70799,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -70780,9 +70855,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -70803,7 +70878,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 2.0,
                 "isMultiplier": true
@@ -71068,7 +71143,7 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
                 "value": 1.0,
                 "isMultiplier": true
@@ -71699,9 +71774,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 0.5,
+                "value": 0.7,
                 "isMultiplier": true
             },
             "ItemStat_JumpPower": {
@@ -72177,7 +72252,7 @@
                 "isMultiplier": false
             },
             "ProjectileScale": {
-                "value": -50.0,
+                "value": -0.5,
                 "isMultiplier": true
             },
             "Damage": {
@@ -72688,9 +72763,9 @@
             "itemQuality": 2,
             "includedInDemo": 0,
             "includedInEarlyAccess": 1,
-            "CostsDurability": 1,
+            "CostsDurability": 0,
             "ProjectileScale": {
-                "value": 2.0,
+                "value": 3.0,
                 "isMultiplier": true
             },
             "ItemStat_MoveSpeed": {
@@ -73219,12 +73294,62 @@
                 "value": 4.0,
                 "isMultiplier": false
             },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
             "displayFields": [
                 "ProjectileTimeScale",
                 "ProjectileAmount",
                 "Damage",
                 "ProjectileDrag",
-                "Spread"
+                "Spread",
+                "ProjectileBehaviourTimeout"
+            ]
+        }
+    ],
+    "ProjectileBehaviourTimeout": [
+        {
+            "id": "1105803853074286941",
+            "m_Name": "Enchantment_MatrixOil",
+            "type": "oil",
+            "artwork": "397051778793936167",
+            "basePrice": 300,
+            "itemQuality": 2,
+            "includedInDemo": 0,
+            "includedInEarlyAccess": 1,
+            "CostsDurability": 1,
+            "ProjectileTimeScale": {
+                "value": -0.9,
+                "isMultiplier": true
+            },
+            "ProjectileAmount": {
+                "value": 3.0,
+                "isMultiplier": true
+            },
+            "Damage": {
+                "value": -0.3,
+                "isMultiplier": true
+            },
+            "ProjectileDrag": {
+                "value": 40.0,
+                "isMultiplier": false
+            },
+            "Spread": {
+                "value": 4.0,
+                "isMultiplier": false
+            },
+            "ProjectileBehaviourTimeout": {
+                "value": 3.0,
+                "isMultiplier": false
+            },
+            "displayFields": [
+                "ProjectileTimeScale",
+                "ProjectileAmount",
+                "Damage",
+                "ProjectileDrag",
+                "Spread",
+                "ProjectileBehaviourTimeout"
             ]
         }
     ],
