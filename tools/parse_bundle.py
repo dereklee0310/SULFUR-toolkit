@@ -20,7 +20,6 @@ BLACKLIST = set(
         "Weapon_WyattPulsarNotUse",
         "Weapon_Arbiter2NotUse",
         "Weapon_RamshackOld_NOT_USED",
-        "Weapon_Blackwater",  # future weapon?
         "Enchantment_TestOil",
         "Enchantment_TestOil2",
         "Enchantment_Satiety",

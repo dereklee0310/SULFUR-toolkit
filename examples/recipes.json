@@ -4119,26 +4119,6 @@
         "oldPrice": 210
     },
     {
-        "recipeName": "Recipe_BuddySandwich_1",
-        "name": "Item_Broth",
-        "quantity": 1,
-        "artwork": "8045260582126796071",
-        "itemsNeeded": [
-            {
-                "name": "Weapon_MoneyStack",
-                "quantity": 1,
-                "artwork": "3443190440855495464"
-            },
-            {
-                "name": "Item_BottledWater",
-                "quantity": 1,
-                "artwork": "-7066971589872746693"
-            }
-        ],
-        "newPrice": 40,
-        "oldPrice": 240
-    },
-    {
         "recipeName": "Recipe_Butter_1",
         "name": "Item_Butter",
         "quantity": 1,
@@ -10875,7 +10855,7 @@
                 "artwork": "-2744528240709202296"
             }
         ],
-        "newPrice": 40,
+        "newPrice": 100,
         "oldPrice": 30
     },
     {
@@ -10895,7 +10875,7 @@
                 "artwork": "-4369646862998779039"
             }
         ],
-        "newPrice": 40,
+        "newPrice": 100,
         "oldPrice": 30
     },
     {
@@ -31820,8 +31800,8 @@
                 "artwork": "-7561720383863443011"
             }
         ],
-        "newPrice": 80,
-        "oldPrice": 50
+        "newPrice": 150,
+        "oldPrice": 110
     },
     {
         "recipeName": "Recipe_PoisonGum_2",
@@ -31840,8 +31820,8 @@
                 "artwork": "-7561720383863443011"
             }
         ],
-        "newPrice": 80,
-        "oldPrice": 190
+        "newPrice": 150,
+        "oldPrice": 250
     },
     {
         "recipeName": "Recipe_Polsa_1 1",
@@ -39436,7 +39416,7 @@
             }
         ],
         "newPrice": 350,
-        "oldPrice": 130
+        "oldPrice": 190
     },
     {
         "recipeName": "Recipe_Surstromming 2",
@@ -39456,7 +39436,7 @@
             }
         ],
         "newPrice": 350,
-        "oldPrice": 80
+        "oldPrice": 140
     },
     {
         "recipeName": "Recipe_Surstromming 3",
@@ -39476,7 +39456,7 @@
             }
         ],
         "newPrice": 350,
-        "oldPrice": 140
+        "oldPrice": 200
     },
     {
         "recipeName": "Recipe_Surstromming 4",
@@ -39496,7 +39476,7 @@
             }
         ],
         "newPrice": 350,
-        "oldPrice": 80
+        "oldPrice": 140
     },
     {
         "recipeName": "Recipe_Taco_1",
@@ -40841,7 +40821,7 @@
             }
         ],
         "newPrice": 300,
-        "oldPrice": 120
+        "oldPrice": 240
     },
     {
         "recipeName": "Recipe_JarOfPoison_1 2",
@@ -40861,7 +40841,7 @@
             }
         ],
         "newPrice": 300,
-        "oldPrice": 120
+        "oldPrice": 180
     },
     {
         "recipeName": "Recipe_JarOfPoison_1 3",
@@ -40881,7 +40861,7 @@
             }
         ],
         "newPrice": 500,
-        "oldPrice": 160
+        "oldPrice": 280
     },
     {
         "recipeName": "Recipe_JarOfPoison_1",
@@ -40901,7 +40881,7 @@
             }
         ],
         "newPrice": 200,
-        "oldPrice": 80
+        "oldPrice": 140
     },
     {
         "recipeName": "Recipe_LoveGrenade 1",
@@ -41316,7 +41296,7 @@
             }
         ],
         "newPrice": 200,
-        "oldPrice": 90
+        "oldPrice": 150
     },
     {
         "recipeName": "Recipe_PoisonGrenade_3",
@@ -41356,7 +41336,7 @@
             }
         ],
         "newPrice": 200,
-        "oldPrice": 180
+        "oldPrice": 250
     },
     {
         "recipeName": "Recipe_PoisonGrenade_4",
@@ -41376,7 +41356,7 @@
             }
         ],
         "newPrice": 200,
-        "oldPrice": 130
+        "oldPrice": 200
     },
     {
         "recipeName": "Recipe_RedsoppPaste",

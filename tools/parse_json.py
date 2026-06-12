@@ -279,10 +279,9 @@ def build_recipe_object(src_data, id_mapping, recipe_data):
 
     old_price = 0
     for item_data in recipe_data["itemsNeeded"]:
-        real_item_data = src_data[id_mapping[item_data["item"]["value"]]]
-        item_name = real_item_data["m_Name"]
-
         try:
+            real_item_data = src_data[id_mapping[item_data["item"]["value"]]]
+            item_name = real_item_data["m_Name"]
             result["itemsNeeded"].append(
                 {
                     "name": item_name,
@@ -292,11 +291,9 @@ def build_recipe_object(src_data, id_mapping, recipe_data):
             )
             old_price += real_item_data["basePrice"] * item_data["quantity"]
             continue
-        except KeyError:
-            # Some items like cactus is not available now
-            logger.warning(
-                "Artwork id not found: '%s'", real_item_data["artwork"]["m_PathID"]
-            )
+        except KeyError as e:
+            logger.warning(e, exc_info=True)
+            return None
 
     result["oldPrice"] = old_price
     return result
@@ -309,6 +306,7 @@ def parse_recipe_data(data):
     recipe_infos = [
         build_recipe_object(data, id_mapping, recipe_data) for recipe_data in recipes
     ]
+    recipe_infos = [x for x in recipe_infos if x] #  Filter out error shits
     recipes_of_items = defaultdict(list)
     for recipe_info in recipe_infos:
         recipes_of_items[recipe_info["name"]].append(
