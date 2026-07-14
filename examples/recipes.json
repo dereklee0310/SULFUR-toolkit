@@ -42707,5 +42707,255 @@
         ],
         "newPrice": 1500,
         "oldPrice": 830
+    },
+    {
+        "recipeName": "Recipe_Enchantment_SacredGround",
+        "name": "Enchantment_SacredGround",
+        "quantity": 1,
+        "artwork": "2777700824956513495",
+        "itemsNeeded": [
+            {
+                "name": "Enchantment_Earth",
+                "quantity": 1,
+                "artwork": "-5272188385312275718"
+            },
+            {
+                "name": "Enchantment_Light",
+                "quantity": 1,
+                "artwork": "2352091176121211133"
+            }
+        ],
+        "newPrice": 3500,
+        "oldPrice": 2000
+    },
+    {
+        "recipeName": "Recipe_BeefJerky_6",
+        "name": "Item_BeefJerky",
+        "quantity": 1,
+        "artwork": "6098454308147746277",
+        "itemsNeeded": [
+            {
+                "name": "Item_LizardSkin",
+                "quantity": 2,
+                "artwork": "-2438037773057512394"
+            }
+        ],
+        "newPrice": 60,
+        "oldPrice": 200
+    },
+    {
+        "recipeName": "Recipe_Enchantment_FoulFate",
+        "name": "Enchantment_FoulFate",
+        "quantity": 1,
+        "artwork": "1373177832042548105",
+        "itemsNeeded": [
+            {
+                "name": "Enchantment_Dark",
+                "quantity": 2,
+                "artwork": "7954706189709371483"
+            }
+        ],
+        "newPrice": 3500,
+        "oldPrice": 2000
+    },
+    {
+        "recipeName": "Recipe_Enchantment_Pollen",
+        "name": "Enchantment_Pollen",
+        "quantity": 1,
+        "artwork": "3820381498762366372",
+        "itemsNeeded": [
+            {
+                "name": "Enchantment_Nature",
+                "quantity": 1,
+                "artwork": "2645463031653542284"
+            },
+            {
+                "name": "Enchantment_Poison",
+                "quantity": 1,
+                "artwork": "992235308759174831"
+            }
+        ],
+        "newPrice": 3500,
+        "oldPrice": 2000
+    },
+    {
+        "recipeName": "Recipe_Cocktail 1",
+        "name": "Item_Cocktail",
+        "quantity": 3,
+        "artwork": "5122690301717068501",
+        "itemsNeeded": [
+            {
+                "name": "Item_Liquor",
+                "quantity": 1,
+                "artwork": "-2386317588911155238"
+            },
+            {
+                "name": "Item_Coffee",
+                "quantity": 1,
+                "artwork": "4121941290723269396"
+            }
+        ],
+        "newPrice": 1200,
+        "oldPrice": 95
+    },
+    {
+        "recipeName": "Recipe_Cocktail 2",
+        "name": "Item_Cocktail",
+        "quantity": 3,
+        "artwork": "5122690301717068501",
+        "itemsNeeded": [
+            {
+                "name": "Item_Liquor",
+                "quantity": 1,
+                "artwork": "-2386317588911155238"
+            },
+            {
+                "name": "Item_BananaSulfs",
+                "quantity": 1,
+                "artwork": "195023952974065531"
+            }
+        ],
+        "newPrice": 1200,
+        "oldPrice": 80
+    },
+    {
+        "recipeName": "Recipe_Cocktail 3",
+        "name": "Item_Cocktail",
+        "quantity": 3,
+        "artwork": "5122690301717068501",
+        "itemsNeeded": [
+            {
+                "name": "Item_Liquor",
+                "quantity": 1,
+                "artwork": "-2386317588911155238"
+            },
+            {
+                "name": "Item_CactusDrink",
+                "quantity": 1,
+                "artwork": "-6455951455730579533"
+            }
+        ],
+        "newPrice": 1200,
+        "oldPrice": 120
+    },
+    {
+        "recipeName": "Recipe_Cocktail 4",
+        "name": "Item_Cocktail",
+        "quantity": 3,
+        "artwork": "5122690301717068501",
+        "itemsNeeded": [
+            {
+                "name": "Item_Liquor",
+                "quantity": 1,
+                "artwork": "-2386317588911155238"
+            },
+            {
+                "name": "Item_Berries",
+                "quantity": 1,
+                "artwork": "-8353441490722436680"
+            }
+        ],
+        "newPrice": 1200,
+        "oldPrice": 100
+    },
+    {
+        "recipeName": "Recipe_Cocktail 5",
+        "name": "Item_Cocktail",
+        "quantity": 3,
+        "artwork": "5122690301717068501",
+        "itemsNeeded": [
+            {
+                "name": "Item_Liquor",
+                "quantity": 1,
+                "artwork": "-2386317588911155238"
+            },
+            {
+                "name": "Item_Cactus",
+                "quantity": 1,
+                "artwork": "-753459149092522257"
+            }
+        ],
+        "newPrice": 1200,
+        "oldPrice": 100
+    },
+    {
+        "recipeName": "Recipe_Cocktail 6",
+        "name": "Item_Cocktail",
+        "quantity": 3,
+        "artwork": "5122690301717068501",
+        "itemsNeeded": [
+            {
+                "name": "Item_Liquor",
+                "quantity": 1,
+                "artwork": "-2386317588911155238"
+            },
+            {
+                "name": "Item_ChocolateSyrup",
+                "quantity": 1,
+                "artwork": "-4393959457617356499"
+            }
+        ],
+        "newPrice": 1200,
+        "oldPrice": 160
+    },
+    {
+        "recipeName": "Recipe_Cocktail 7",
+        "name": "Item_Cocktail",
+        "quantity": 3,
+        "artwork": "5122690301717068501",
+        "itemsNeeded": [
+            {
+                "name": "Item_Liquor",
+                "quantity": 1,
+                "artwork": "-2386317588911155238"
+            },
+            {
+                "name": "Item_Jam",
+                "quantity": 1,
+                "artwork": "5821576994495228222"
+            }
+        ],
+        "newPrice": 1200,
+        "oldPrice": 150
+    },
+    {
+        "recipeName": "Recipe_Cocktail 8",
+        "name": "Item_Cocktail",
+        "quantity": 3,
+        "artwork": "5122690301717068501",
+        "itemsNeeded": [
+            {
+                "name": "Item_Liquor",
+                "quantity": 1,
+                "artwork": "-2386317588911155238"
+            },
+            {
+                "name": "Item_Soda",
+                "quantity": 1,
+                "artwork": "-4226886939185924720"
+            }
+        ],
+        "newPrice": 1200,
+        "oldPrice": 90
+    },
+    {
+        "recipeName": "Recipe_Cocktail 9",
+        "name": "Item_Cocktail",
+        "quantity": 3,
+        "artwork": "5122690301717068501",
+        "itemsNeeded": [
+            {
+                "name": "Item_Liquor",
+                "quantity": 1,
+                "artwork": "-2386317588911155238"
+            },
+            {
+                "name": "Item_Banana",
+                "quantity": 1,
+                "artwork": "2193929057029675769"
+            }
+        ],
+        "newPrice": 1200,
+        "oldPrice": 90
     }
 ]
